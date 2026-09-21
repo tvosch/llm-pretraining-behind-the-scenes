@@ -78,3 +78,41 @@ progress::-webkit-progress-bar{background:#223340}progress::-webkit-progress-val
 .figure-tag[data-tag="measured"]{color:var(--blue);border-color:#2ba8ff55}
 .figure-tag[data-tag="illustrative"]{color:var(--orange);border-color:#ef870055}
 .tbd{display:inline-block;font-size:10px;font-weight:600;line-height:1.6;color:var(--orange);background:#ef870014;border:1px dashed #ef870088;border-radius:4px;padding:1px 7px;letter-spacing:0;text-transform:none;white-space:nowrap}
+
+/* ---- the training-step figure -------------------------------------------
+   Rows are labelled and spaced; the current phase decides what is lit. */
+.step-figure{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.step-line{display:flex;align-items:center;justify-content:center;gap:10px;opacity:.5;transition:opacity .35s}
+.step-tag{flex:0 0 74px;text-align:right;font-size:8px;font-weight:700;letter-spacing:.07em;line-height:1.3;color:var(--muted)}
+.step-flow{display:flex;justify-content:center;gap:40px;color:var(--blue);font-size:15px;line-height:1;transition:transform .35s,color .35s}
+.step-figure .model-block{margin:0;transition:border-color .35s,background .35s}
+.step-explain{display:none;font-size:11.5px;line-height:1.55;color:var(--ink);margin:0 auto;max-width:370px;min-height:34px}
+.step-explain.current{display:block}
+.token.is-right{border-color:#1cefa555;color:var(--green)}
+.token.is-wrong{border-color:#ef870088;color:var(--orange);background:#ef870012}
+
+/* phase 0 predict · 1 loss · 2 gradients · 3 update */
+.visual[data-active="0"] .step-line:nth-of-type(1),
+.visual[data-active="0"] .step-line:nth-of-type(2),
+.visual[data-active="1"] .step-line,
+.visual[data-active="2"] .step-line:nth-of-type(2),
+.visual[data-active="3"] .step-line:nth-of-type(1){opacity:1}
+.visual[data-active="2"] .step-flow{transform:rotate(180deg);color:var(--orange)}
+.visual[data-active="2"] .model-block{border-color:#ef8700aa}
+.visual[data-active="3"] .model-block{border-color:var(--green);background:#1cefa514}
+.loop-bottom button{width:auto;height:auto;min-height:0;border:0;border-bottom:2px solid #385160;border-radius:0;background:none;padding:7px 2px;font-size:12px;color:var(--muted)}
+.loop-bottom button:hover{background:none;color:var(--ink);border-color:var(--ink)}
+.loop-bottom button.current{border-color:var(--orange);color:var(--orange)}
+
+/* ---- the monitoring figure ---------------------------------------------- */
+.at-risk{font-size:11.5px;line-height:1.6;color:var(--muted);margin:0;text-align:center}
+.at-risk strong{color:var(--orange);font-weight:600}
+.watch-stats{display:flex;justify-content:center;gap:34px;text-align:center}
+.watch-stats strong{display:block;font-size:20px;font-family:Roboto,Arial,sans-serif;margin-bottom:3px}
+.watch-stats small{font-size:10px;color:var(--muted)}
+.incident{margin:0;display:flex;flex-direction:column;gap:8px;align-items:center}
+.incident img{width:100%;border:1px solid var(--line);border-radius:6px;display:block}
+.incident figcaption{font-size:10.5px;line-height:1.5;color:var(--muted);text-align:center}
+.incident--empty{border:1px dashed #a6c2d63d;border-radius:6px;padding:13px;gap:9px}
+.incident-label{font-size:10px;color:var(--muted)}
+#scene[data-chapter="step"] .visual,#scene[data-chapter="monitor"] .visual{gap:11px;max-width:430px;margin-top:16px}

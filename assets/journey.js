@@ -47,6 +47,11 @@
   const FILLERS = {
     partners: () => partners.length,
     nextYear: () => SNAP.family.nextModelYear ?? '—',
+    runStart: () => SNAP.m32.startedAt
+      ? new Date(SNAP.m32.startedAt).toLocaleDateString('en-GB', {day:'numeric', month:'long'}) : '—',
+    /* Derived on every view, so "days so far" cannot go stale in the copy. */
+    runDays: () => SNAP.m32.startedAt
+      ? Math.max(0, Math.floor((Date.now() - Date.parse(SNAP.m32.startedAt)) / 86400000)) : "—",
   };
   const fill = value => t(value).replace(/\{\{(\w+)\}\}/g, (all,key) => FILLERS[key] ? FILLERS[key]() : all);
 
@@ -104,8 +109,20 @@
       let phase=0, paused=reduced;
       const button=$('#step-toggle');
       const paintButton=()=>{button.innerHTML=`<i data-lucide="${paused?'play':'pause'}"></i>`;button.setAttribute('aria-pressed',String(paused));button.title=paused?t(UI.resumeFigure):t(UI.pauseFigure);button.setAttribute('aria-label',button.title);icons();};
-      stageTimer=setInterval(()=>{if(paused||document.hidden)return;phase=(phase+1)%4;document.querySelectorAll('[data-phase]').forEach(n=>n.classList.toggle('current',+n.dataset.phase===phase));},1300);
-      button.onclick=()=>{paused=!paused;paintButton();};paintButton();
+      /* The phase drives the figure, not just the label: [data-phase] elements
+         get .current, and .visual[data-active] lets CSS light up the row the
+         phase is about. Clicking a phase pauses and jumps to it. */
+      const paintPhase=()=>{
+        document.querySelectorAll('[data-phase]').forEach(n=>{
+          const on=+n.dataset.phase===phase;
+          n.classList.toggle('current',on);
+          if(n.tagName==='BUTTON')n.setAttribute('aria-pressed',String(on));
+        });
+        const figure=$('.visual'); if(figure)figure.dataset.active=phase;
+      };
+      document.querySelectorAll('.loop-bottom [data-phase]').forEach(b=>{b.onclick=()=>{phase=+b.dataset.phase;paused=true;paintPhase();paintButton();};});
+      stageTimer=setInterval(()=>{if(paused||document.hidden)return;phase=(phase+1)%4;paintPhase();},2600);
+      button.onclick=()=>{paused=!paused;paintButton();};paintButton();paintPhase();
     }
     icons();draw();
   }

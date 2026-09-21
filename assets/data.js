@@ -22,6 +22,18 @@ const SNAP = {
     live: false,           // flipped to true by live.json
   },
 
+  /* --------------------------------------------------- pictures of the run */
+  /* Real screenshots from the run. Put the file in assets/images/ and fill
+     these in; until then the slot renders the "still to fill in" chip rather
+     than a drawn stand-in, because a made-up spike would defeat the point. */
+  incidents: {
+    lossSpike: {
+      image: null,     // e.g. "assets/images/32b-loss-spike.png"
+      alt: null,       // what a screen reader should hear
+      caption: null,   // one line: what happened, and when
+    },
+  },
+
   /* ------------------------------------------------------ the model family */
   family: {
     // The larger model on the project roadmap. The year is all that is

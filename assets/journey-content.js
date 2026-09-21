@@ -89,12 +89,12 @@ JOURNEY.chapters = [
   },
   {
     place: 3,
-    label: 'MultiSynth · synthetic data',
+    label: 'MultiSynt · synthetic data',
     kicker: 'Leonardo · Cineca / Multilingual data',
-    title: 'MultiSynth.',
-    text: 'On Leonardo, we also worked on MultiSynth: synthesizing multilingual pretraining data.',
+    title: 'MultiSynt.',
+    text: 'On Leonardo, we also worked on MultiSynt: synthesizing multilingual pretraining data.',
     note: 'More project details to follow.',
-    visual: 'multisynth',
+    visual: 'MultiSynt',
     tag: 'illustrative',
   },
   {
@@ -112,8 +112,8 @@ JOURNEY.chapters = [
     label: 'One training step',
     kicker: 'JUPITER · JSC / Inside a step',
     title: 'How a model<br>actually learns.',
-    text: 'Predict the next tokens. Measure the loss. Compute gradients. Only then does the optimizer change the parameters.',
-    note: 'Positions train in parallel. Each sees only the tokens up to its position.',
+    text: 'Predict, measure how wrong, trace the blame, adjust. Step through the four movements, or let them run.',
+    note: 'Positions train in parallel, each seeing only the tokens to its left. The example and its prediction are invented.',
     visual: 'step',
     tag: 'illustrative',
   },
@@ -121,9 +121,9 @@ JOURNEY.chapters = [
     place: 4,
     label: 'Watching the run',
     kicker: 'JUPITER · JSC / Day-to-day',
-    title: 'The run needs<br>looking after.',
-    text: 'Watch the loss, gradients and throughput. Check the data. Save checkpoints. Investigate when the run stops behaving as expected.',
-    note: 'Monitoring is about patterns over time, not just a single number.',
+    title: 'Someone is<br>always watching.',
+    text: 'Running since {{runStart}}, {{runDays}} days so far. People take turns watching it, day and night — the team calls them babysitters.',
+    note: 'Is the loss still falling, has a node dropped out, is the last checkpoint recent? Nothing recovers by itself at this scale: a person decides whether to continue or to restart.',
     visual: 'monitor',
     tag: 'measured',
   },
@@ -131,9 +131,9 @@ JOURNEY.chapters = [
     place: 4,
     label: 'Annealing',
     kicker: 'JUPITER · JSC / Next phase',
-    title: 'A gentler finish.',
-    text: 'Lower the learning rate and shift the data mix towards quality. Longer-context training is another part of the plan to explore, not an automatic consequence of annealing.',
-    note: 'The result is still a base model. The exact schedule and context target are not published here.',
+    title: 'Slowing down<br>on purpose.',
+    text: 'For most of the run the learning rate is held high, so the model keeps moving and keeps learning. Annealing is the final stretch, when it is brought down step by step. Large updates would now undo as much as they fix; small ones let the model settle. The data mix changes at the same time, towards the best material available, because what a model sees at the end shapes it more than what it saw in the first month.',
+    note: 'That last point is an empirical finding, not a law. The schedule here is WSD: warmup, a long stable phase, then decay. The exact data mix and context target for this run are not published here.',
     visual: 'anneal',
     tag: 'schematic',
   },
@@ -301,7 +301,7 @@ JOURNEY.figures = {
     </div>
     <a class="project-link" href="${d.m9.weightsUrl}" target="_blank" rel="noopener noreferrer">Prelude on Hugging Face <i data-lucide="arrow-up-right"></i></a>`,
 
-  multisynth: () => `
+  MultiSynt: () => `
     <div class="synth-flow">
       <i data-lucide="languages" aria-hidden="true"></i>
       <strong>Multilingual synthesis</strong>
@@ -339,38 +339,75 @@ JOURNEY.figures = {
     <div class="visual-caption">${stamp()}</div>`;
   },
 
+  /* The four phase buttons drive this figure: the engine puts the current
+     phase on .visual[data-active] and marks [data-phase] elements .current,
+     so each phase changes what is emphasised and what the caption says.
+     The example sentence and the wrong guess are invented, as the note says. */
   step: ({ d, tokens }) => `
-    ${tokens(['Het', '▁weer', '▁in'])}
-    <div class="loop-arrows"><span>↓</span><span>↓</span><span>↓</span></div>
-    <div class="model-block">OpenEuroLLM · ${d.m32.name} parameters</div>
-    <div class="loop-label">NEXT-TOKEN TARGETS</div>
-    ${tokens(['▁weer', '▁in', '▁Nederland'])}
-    <div class="loop-bottom">
-      <span data-phase="0" class="current">Predict</span>
-      <span data-phase="1">Loss</span>
-      <span data-phase="2">Gradients</span>
-      <span data-phase="3">Update ↺</span>
-    </div>
-    <button class="small-action" id="step-toggle" aria-label="Pause training illustration" title="Pause training illustration" aria-pressed="false"><i data-lucide="pause"></i></button>`,
+    <div class="step-figure">
+      <div class="step-line"><span class="step-tag">CONTEXT</span>${tokens(['Het', '▁weer', '▁in'])}</div>
+      <div class="step-flow" aria-hidden="true"><span>↓</span><span>↓</span><span>↓</span></div>
+      <div class="model-block">OpenEuroLLM · ${d.m32.name} parameters</div>
+      <div class="step-line"><span class="step-tag">PREDICTED</span>
+        <div class="tokens"><span class="token is-right">▁weer</span><span class="token is-right">▁in</span><span class="token is-wrong">▁Duitsland</span></div>
+      </div>
+      <div class="step-line step-target"><span class="step-tag">ACTUALLY NEXT</span>${tokens(['▁weer', '▁in', '▁Nederland'])}</div>
 
-  monitor: ({ d, num, stamp, tbd }) => `
+      <p class="step-explain" data-phase="0">Three positions, three predictions, all at once. Each sees only the tokens to its left, never the answer.</p>
+      <p class="step-explain" data-phase="1">Two guesses match, one does not. The loss says how far off they were — not right or wrong, but by how much.</p>
+      <p class="step-explain" data-phase="2">The loss is traced back through all ${d.m32.arch.layers} layers: how much did each parameter contribute to being wrong?</p>
+      <p class="step-explain" data-phase="3">Every parameter shifts a little towards being less wrong. Then the next ${(d.m32.tokensPerStep / 1e6).toFixed(1)}M tokens arrive.</p>
+
+      <div class="loop-bottom" role="group" aria-label="Training step phases">
+        <button type="button" data-phase="0" class="current">Predict</button>
+        <button type="button" data-phase="1">Loss</button>
+        <button type="button" data-phase="2">Gradients</button>
+        <button type="button" data-phase="3">Update ↺</button>
+      </div>
+      <button class="small-action" id="step-toggle" aria-label="Pause training illustration" title="Pause training illustration" aria-pressed="false"><i data-lucide="pause"></i></button>
+    </div>`,
+
+  /* Concrete rather than abstract: what a crash would cost, what has gone
+     wrong so far, and a real picture of the run when it misbehaved. The
+     failure counts come from the queue monitor once it is wired; the picture
+     is a file you drop in and name in data.js. Neither is drawn by hand. */
+  monitor: ({ d, num, stamp, tbd }) => {
+    const m = d.m32, incident = d.incidents.lossSpike;
+    const atRisk = m.saveInterval && m.secPerStep
+      ? (m.saveInterval * m.secPerStep / 3600).toFixed(1) : null;
+    return `
     <div class="monitor-readout">
-      <div><strong>${d.m32.loss == null ? tbd('loss') : d.m32.loss.toFixed(2)}</strong><small>Loss</small></div>
-      <div><strong>${d.m32.gradNorm ?? '—'}</strong><small>Gradient norm</small></div><!-- em dash, not a chip: the log line may simply not report it -->
-      <div><strong>${Number.isFinite(d.m32.secPerStep) ? d.m32.secPerStep + 's' : tbd('step time')}</strong><small>Per step</small></div>
+      <div><strong>${m.loss == null ? tbd('loss') : m.loss.toFixed(2)}</strong><small>Loss</small></div>
+      <div><strong>${m.gradNorm ?? '—'}</strong><small>Gradient norm</small></div>
+      <div><strong>${Number.isFinite(m.secPerStep) ? m.secPerStep + 's' : tbd('step time')}</strong><small>Per step</small></div>
     </div>
-    <div class="model-block">Checkpoint · step ${num(d.m32.lastCheckpointStep)}</div>
-    <div class="status-list"><span>Loss &amp; stability</span><span>Performance</span><span>Recovery</span></div>
-    <div class="visual-caption">${stamp()}</div>`,
+    <p class="at-risk">${atRisk
+      ? `Last checkpoint at step ${num(m.lastCheckpointStep)}. They are written every ${num(m.saveInterval)} steps, so a crash costs up to <strong>${atRisk} hours</strong> of compute.`
+      : tbd('checkpoint interval')}</p>
+    <div class="watch-stats">
+      <div><strong>${d.cluster.restartsTotal == null ? tbd('restarts') : num(d.cluster.restartsTotal)}</strong><small>Restarts</small></div>
+      <div><strong>${d.cluster.failuresTotal == null ? tbd('node failures') : num(d.cluster.failuresTotal)}</strong><small>Node failures</small></div>
+    </div>
+    ${incident.image
+      ? `<figure class="incident"><img src="${incident.image}" alt="${incident.alt ?? ''}" loading="lazy"><figcaption>${incident.caption ?? ''}</figcaption></figure>`
+      : `<div class="incident incident--empty"><span class="incident-label">A picture of the run going wrong</span>${tbd('loss-spike screenshot')}</div>`}
+    <div class="visual-caption">${stamp()}</div>`;
+  },
 
-  anneal: ({ plot }) => `
+  /* The decay fraction is the real one from data.js (wsd.decayFrac); the
+     steps and days that follow are arithmetic on it at the current pace. */
+  anneal: ({ d, num, plot, tbd }) => {
+    const decay = d.wsd.decayFrac, steps = decay && d.m32.totalSteps ? decay * d.m32.totalSteps : null;
+    const days = steps && d.m32.secPerStep ? (steps * d.m32.secPerStep / 86400).toFixed(0) : null;
+    return `
     ${plot(true)}
     <div class="intro-meta">
-      <div><strong>Lower LR</strong>smaller parameter updates</div>
-      <div><strong>Quality mix</strong>final pretraining data</div>
+      <div><strong>${decay ? Math.round(decay * 100) + '%' : tbd('decay fraction')}</strong>of the schedule is the decay phase</div>
+      <div><strong>${steps ? num(Math.round(steps)) : tbd('decay steps')}</strong>steps${days ? `, about ${days} days at today's pace` : ''}</div>
     </div>
     <div class="intro-rule"></div>
-    <span class="pill" style="align-self:center">Base model → post-training</span>`,
+    <span class="pill" style="align-self:center">Base model → post-training</span>`;
+  },
 
   sft: () => `
     <div class="conversation">
