@@ -71,8 +71,8 @@ const SNAP = {
     annealProgress: null,     // 0..1
     secPerStep: null,
     loss: null,
-    gpus: null,
-    gpuType: null,
+    gpus: 1024,
+    gpuType: "NVIDIA A100",
     startedAt: "2026-06-12",
     weightsUrl: "https://huggingface.co/openeurollm/prelude",
   },

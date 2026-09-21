@@ -29,9 +29,9 @@ const LINKS = {
 const C = {
 project: {
   title: L("Training OpenEuroLLM", "Training OpenEuroLLM"),
-  subtitle: L("Een kijkje in mijn werk aan taalmodellen op Europese supercomputers.", "Inside my work training language models on European supercomputers."),
+  subtitle: L("Een kijkje achter de schermen bij het trainen van taalmodellen op Europese supercomputers.", "Inside the training of language models on European supercomputers."),
   context: L("In dit project", "In this project"),
-  role: L("Mijn werk hierin", "My involvement"),
+  role: L("Werk in het project", "Work in the project"),
   explain: L("Hoe dit werkt", "How this works"),
   evidence: L("Uit de run", "From the run"),
   observations: L("Vanuit het project", "From the project"),
@@ -51,13 +51,13 @@ project: {
     11: L("Evaluatie ondersteunt het project tijdens en na training. Gemeten scores van deze modellen zijn hier nog niet beschikbaar; lege velden zijn geen nulscore.", "Evaluation supports the project during and after training. Measured scores for these models are not available here yet; empty fields are not zero scores."),
   },
   roles: {
-    data: L("Ik help met de dataverwerking voor onze modellen.", "I help with data processing for our models."),
-    design: L("Mijn werk omvat ook scaling laws en de experimenten rond het opschalen van training.", "My work also involves scaling laws and experiments around scaling up training."),
-    run: L("Ik werk aan het draaien en bewaken van deze training op Europese HPC-systemen.", "I work on running and monitoring this training on European HPC systems."),
+    data: L("Dit onderdeel omvat de dataverwerking voor onze modellen.", "This part covers the data processing for our models."),
+    design: L("Dit onderdeel omvat scaling laws en de experimenten rond het opschalen van training.", "This part covers scaling laws and the experiments around scaling up training."),
+    run: L("Dit onderdeel omvat het draaien en bewaken van deze training op Europese HPC-systemen.", "This part covers running and monitoring this training on European HPC systems."),
   },
 },
 opening: {
-  byline: L("Ik werk binnen OpenEuroLLM aan het trainen van taalmodellen op Europese supercomputers: van data verwerken en schaalexperimenten tot het bewaken van de training.", "I work on training language models on European supercomputers within OpenEuroLLM: from processing data and scaling experiments to monitoring training."),
+  byline: L("Binnen OpenEuroLLM worden taalmodellen getraind op Europese supercomputers: van data verwerken en schaalexperimenten tot het bewaken van de training.", "Within OpenEuroLLM, language models are trained on European supercomputers: from processing data and scaling experiments to monitoring training."),
   loop: L("Wat gebeurt er in een trainingsstap?", "What happens in a training step?"),
   loopIntro: L("Het model voorspelt het volgende stukje tekst. De oorspronkelijke tekst levert het antwoord waarmee we die voorspelling vergelijken.", "The model predicts the next piece of text. The original text provides the answer to compare that prediction with."),
   realTokens: L("Uit de echte tokenizer", "From the actual tokenizer"),
@@ -83,7 +83,7 @@ opening: {
 
 /* ------------------------------------------------------------------- ui -- */
 ui: {
-  title:    L("Een leven als LLM-ontwikkelaar", "A life in LLM development"),
+  title:    L("Achter de schermen van LLM-pretraining", "Behind the scenes of LLM pretraining"),
   nav: {
     top:    L("Boven", "Top"),
     map:    L("Overzicht", "Overview"),

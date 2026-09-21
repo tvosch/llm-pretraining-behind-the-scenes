@@ -1,4 +1,4 @@
-# European Pretraining Journey
+# Behind the Scenes of LLM Pretraining
 
 Open `http://localhost:8722/` using the existing `serve.sh` server.
 The original process view is available as `process.html`.
@@ -11,7 +11,7 @@ The original process view is available as `process.html`.
 - `live.json`: optional feed, polled every 15 minutes. Missing or invalid
   updates leave the last valid snapshot visible with its timestamp.
 
-Chapters can be linked directly, e.g. `#chapter-6` for the 32B run.
+Chapters can be linked directly, e.g. `#chapter-7` for the 32B run.
 Arrow keys navigate; the menu and map pins also select chapters. Reduced-motion
 preferences skip travel animation and pause the training-step illustration.
 
@@ -23,9 +23,16 @@ The introduction shows the model family: 9B (smallest), 32B (intermediate,
 training now), and a larger model planned for 2027, following the author's
 roadmap. Chapter 2 introduces the 21 partners currently listed on the official
 project site, with locally stored logos linking to each partner's website.
-The displayed country list is illustrative, not an exhaustive consortium list.
 Machine/operator pairs: Snellius/SURF, LUMI/CSC, MareNostrum 5/BSC,
 Leonardo/Cineca and JUPITER/JSC. Map pins retain city names.
+
+The 12-chapter journey includes Prelude (9B, 1,024 NVIDIA A100 GPUs) with its
+Hugging Face link, plus a separate MultiSynth chapter at Bologna describing
+multilingual synthetic pretraining data. Further MultiSynth details are pending.
+The partners chapter groups smaller, evenly spaced marks on a dark background.
+The supplied `assets/images/EU-cofounded.webp` image provides the EU co-funding
+lockup, including the flag and text. The introduction briefly states the project's
+open, EU-compliant and linguistically diverse aims.
 
 ## Assets
 

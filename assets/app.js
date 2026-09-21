@@ -1668,7 +1668,7 @@ function projectEvidence() {
     { step: 7, label: "JUPITER", title: S.lang === "nl" ? "2.048 GPU's · 512 knooppunten" : "2,048 GPUs · 512 nodes",
       detail: "NVIDIA GH200" },
     { step: 13, label: t(C.project.role), title: S.lang === "nl" ? "Data verwerken & trainingsrecept" : "Data processing & training recipe",
-      detail: S.lang === "nl" ? "Mijn bijdrage aan het grotere trainingsproject" : "My contribution to the wider training project" },
+      detail: S.lang === "nl" ? "Onderdeel van het grotere trainingsproject" : "Part of the wider training project" },
   ];
   var notes = C.project.notes.filter(function (n) { return n.approved === true; });
   if (notes.length) {
