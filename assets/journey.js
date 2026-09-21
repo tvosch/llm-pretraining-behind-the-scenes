@@ -9,6 +9,28 @@
   'use strict';
   const $ = s => document.querySelector(s);
 
+  /* A browser holding an index.html from before the content split has no
+     script tag for journey-content.js, and would otherwise throw here and
+     leave the visitor with a blank map and no chapters. Load the content and
+     restart, once; HTML on a CDN outlives an asset version bump. */
+  if (typeof JOURNEY === 'undefined') {
+    if (window.__journeyRestarted) return;
+    window.__journeyRestarted = true;
+    const content = document.createElement('script');
+    content.src = 'assets/journey-content.js';
+    content.onload = () => {
+      const engine = document.createElement('script');
+      engine.src = 'assets/journey.js';
+      document.head.append(engine);
+    };
+    content.onerror = () => {
+      const credit = $('.map-credit');
+      if (credit) credit.textContent = 'Please reload the page to load the journey.';
+    };
+    document.head.append(content);
+    return;
+  }
+
   const places = JOURNEY.places, chapters = JOURNEY.chapters, partners = JOURNEY.partners;
   const UI = JOURNEY.ui;
   places.forEach((place,i)=>{place.chapter=chapters.findIndex(chapter=>chapter.place===i);});
