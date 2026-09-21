@@ -120,3 +120,37 @@ progress::-webkit-progress-bar{background:#223340}progress::-webkit-progress-val
 /* The annealing figure ends with a pill; keep it clear of the chapter note. */
 #scene[data-chapter="anneal"] .visual{gap:12px;margin-bottom:6px}
 #scene[data-chapter="anneal"] .intro-rule{margin:6px auto}
+
+/* ---- short viewports ----------------------------------------------------
+   #scene stops shrinking at min-height 590px, so on a laptop (a 900px
+   screen is roughly 780px of inner height) the content used to run into
+   itself: the scene centres its children and overlaps them rather than
+   overflowing. Tighten the type and spacing first, then allow scrolling as
+   a safety valve so text can never sit on top of other text.
+   `safe center` keeps the top of an overflowing scene reachable. */
+@media (max-height:880px){
+  #scene{padding:32px 60px}
+  h1{font-size:34px;margin:12px 0 10px}
+  p.lede{font-size:14px;line-height:1.55}
+  .visual{margin-top:14px!important;margin-bottom:6px}
+  .scene-note{margin-top:6px}
+  .step-figure{gap:6px}
+  .step-explain{min-height:26px;line-height:1.45}
+  .token{padding:7px 9px}
+  #scene[data-chapter="step"] .visual,#scene[data-chapter="monitor"] .visual{gap:9px;margin-top:12px!important}
+}
+@media (max-height:740px){
+  #scene{padding:24px 52px}
+  h1{font-size:29px;margin:9px 0 8px}
+  p.lede{font-size:13.5px}
+  .plot{height:104px}
+  .monitor-readout strong{font-size:22px}
+}
+#scene{overflow-y:auto;overscroll-behavior:contain;justify-content:safe center}
+#scene::-webkit-scrollbar{width:0;height:0}
+
+/* The scene's children must never be squeezed: a compressed .visual keeps
+   justify-content:center internally, so its figure spills out of both ends
+   and lands on the lede above and the note below. Let the scene scroll
+   instead - that is what the overflow rule above is for. */
+#scene>*{flex-shrink:0}
