@@ -22,6 +22,13 @@ const SNAP = {
     live: false,           // flipped to true by live.json
   },
 
+  /* ------------------------------------------------------ the model family */
+  family: {
+    // The larger model on the project roadmap. The year is all that is
+    // stated publicly; null would render as "still to fill in".
+    nextModelYear: 2027,
+  },
+
   /* -------------------------------------------------------- the 32B run */
   m32: {
     name: "32B",

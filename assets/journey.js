@@ -1,103 +1,87 @@
+/* ==========================================================================
+   Journey engine: map, navigation, figures, live feed.
+
+   It holds no copy and no numbers. Copy and figures live in
+   journey-content.js (JOURNEY), numbers in data.js (SNAP). If you came here
+   to change a sentence or a figure, it is in journey-content.js.
+   ========================================================================== */
 (() => {
   'use strict';
   const $ = s => document.querySelector(s);
-  const places = [
-    {name:'Amsterdam', machine:'Snellius', operator:'SURF', country:'The Netherlands', lon:4.90, lat:52.37},
-    {name:'Kajaani', machine:'LUMI', operator:'CSC', country:'Finland', lon:27.73, lat:64.23},
-    {name:'Barcelona', machine:'MareNostrum 5', operator:'BSC', country:'Spain', lon:2.17, lat:41.39},
-    {name:'Bologna', machine:'Leonardo', operator:'Cineca', country:'Italy', lon:11.34, lat:44.49},
-    {name:'Jülich', machine:'JUPITER', operator:'JSC', country:'Germany', lon:6.36, lat:50.92}
-  ];
-  const chapters = [
-    {place:0, title:'Behind the scenes<br>of LLM pretraining.', label:'Behind the scenes', kicker:'Snellius · SURF / OpenEuroLLM', text:'From SURF in Amsterdam to Europe’s supercomputers: the data, experiments and training behind the OpenEuroLLM model family.', visual:'intro', note:'OpenEuroLLM aims: truly open · EU-compliant · linguistically diverse.'},
-    {place:0, title:'Built across Europe.', label:'The project partners', kicker:'OpenEuroLLM / The collaboration', text:'21 partners. A series of foundation models for transparent AI in Europe.', visual:'partners', note:''},
-    {place:1, title:'Before the model,<br>the data.', label:'Preparing the data', kicker:'LUMI · CSC / Data preparation', text:'Curate, clean, deduplicate. Then turn text into tokens and mix the languages and sources the model will learn from.', visual:'data', note:'Source rights, quality, personal data and evaluation overlap all need attention.'},
-    {place:2, title:'Small runs.<br>Big decisions.', label:'Scaling experiments', kicker:'MareNostrum 5 · BSC / Experiments', text:'Experiments help us choose the global batch size and learning rate. Scaling laws connect model size, data and compute to the bigger training budget.', visual:'scaling', note:'Illustrative curves, not measured experiment results.'},
-    {place:3, title:'Prelude.', label:'Prelude · 9B', kicker:'Leonardo · Cineca / Pretraining', text:'The smallest model in the OpenEuroLLM family. Trained on 1,024 NVIDIA A100 GPUs on Leonardo in Bologna.', visual:'nine', note:'Pretrained · awaiting annealing.'},
-    {place:3, title:'MultiSynth.', label:'MultiSynth · synthetic data', kicker:'Leonardo · Cineca / Multilingual data', text:'On Leonardo, we also worked on MultiSynth: synthesizing multilingual pretraining data.', visual:'multisynth', note:'More project details to follow.'},
-    {place:4, title:'Now, 32 billion.', label:'The 32B run', kicker:'JUPITER · JSC / Training', text:'Our intermediate model is training now. Thousands of GPUs work together as we build towards a larger model planned for 2027.', visual:'run', note:'OpenEuroLLM model family · 9B → 32B now → larger model planned for 2027.'},
-    {place:4, title:'How a model<br>actually learns.', label:'One training step', kicker:'JUPITER · JSC / Inside a step', text:'Predict the next tokens. Measure the loss. Compute gradients. Only then does the optimizer change the parameters.', visual:'step', note:'Positions train in parallel. Each sees only the tokens up to its position. Predictions are illustrative.'},
-    {place:4, title:'The run needs<br>looking after.', label:'Watching the run', kicker:'JUPITER · JSC / Day-to-day', text:'Watch the loss, gradients and throughput. Check the data. Save checkpoints. Investigate when the run stops behaving as expected.', visual:'monitor', note:'Monitoring is about patterns over time, not just a single number.'},
-    {place:4, title:'A gentler finish.', label:'Annealing', kicker:'JUPITER · JSC / Next phase', text:'Lower the learning rate and shift the data mix towards quality. Longer-context training is another part of the plan to explore, not an automatic consequence of annealing.', visual:'anneal', note:'The result is still a base model. The exact schedule and context target are not published here.'},
-    {place:4, title:'From text to<br>helpful answers.', label:'Supervised fine-tuning', kicker:'To come / SFT', text:'Train on examples of prompts and good responses. The base model learns the format and behaviour of an assistant.', visual:'sft', note:'Future chapter. Post-training hardware and schedule are not confirmed; the map stays at the last known stop.'},
-    {place:4, title:'Learning from<br>feedback.', label:'Reinforcement learning', kicker:'To come / Post-training', text:'Reward better responses. Feedback can come from people or from outcomes we can verify, such as passing a code test.', visual:'rl', note:'GRPO is an optimization algorithm; RLHF and RLVR describe feedback sources. The project’s method is not yet confirmed.'}
-  ];
+
+  const places = JOURNEY.places, chapters = JOURNEY.chapters, partners = JOURNEY.partners;
+  const UI = JOURNEY.ui;
   places.forEach((place,i)=>{place.chapter=chapters.findIndex(chapter=>chapter.place===i);});
-  const partners=[
-    {name:'Charles University / UFAL',href:'https://ufal.mff.cuni.cz',logo:'charles-university.webp',group:'research'},
-    {name:'AI Sweden',href:'https://www.ai.se/en',logo:'ai-sweden.webp',group:'research'},
-    {name:'ALT-EDIC',href:'https://alt-edic.eu/about-us/',logo:'alt-edic.webp',group:'research'},
-    {name:'University of Tübingen',href:'https://uni-tuebingen.de/en/',logo:'university-tuebingen.webp',group:'research'},
-    {name:'ELLIS Institute Tübingen',href:'https://institute-tue.ellis.eu/',logo:'ellis-tuebingen.webp',group:'research'},
-    {name:'Fraunhofer IAIS',href:'https://www.iais.fraunhofer.de/en.html',logo:'fraunhofer-iais.webp',group:'research'},
-    {name:'Barcelona Supercomputing Center',href:'https://www.bsc.es/',logo:'bsc.svg',group:'research'},
-    {name:'Forschungszentrum Jülich',href:'https://www.fz-juelich.de/en',logo:'fz-juelich.webp',group:'research'},
-    {name:'Eindhoven University of Technology',href:'https://www.tue.nl/en/',logo:'tu-eindhoven.webp',group:'research'},
-    {name:'University of Helsinki',href:'https://www.helsinki.fi/en',logo:'university-helsinki.webp',group:'research'},
-    {name:'University of Oslo',href:'https://www.uio.no/english/',logo:'university-oslo.webp',group:'research'},
-    {name:'University of Turku',href:'https://www.utu.fi/en',logo:'university-turku.webp',group:'research'},
-    {name:'Aleph Alpha',href:'https://aleph-alpha.com/',logo:'aleph-alpha.webp',group:'company'},
-    {name:'AMD Silo AI',href:'https://www.silo.ai/',logo:'amd-silo-ai.svg',group:'company'},
-    {name:'Ellamind',href:'https://ellamind.com/',logo:'ellamind.webp',group:'company'},
-    {name:'LightOn',href:'https://www.lighton.ai/',logo:'lighton.webp',group:'company'},
-    {name:'ELDA',href:'http://www.elda.fr/en/',logo:'elda.webp',group:'company'},
-    {name:'Prompsit',href:'https://www.prompsit.com/',logo:'prompsit.webp',group:'company'},
-    {name:'Cineca',href:'https://www.cineca.it/en',logo:'cineca.svg',group:'hpc'},
-    {name:'CSC',href:'https://csc.fi/en/',logo:'csc.webp',group:'hpc'},
-    {name:'SURF',href:'https://www.surf.nl/en',logo:'surf.webp',group:'hpc'}
-  ];
+
   const canvas = $('#europe'), ctx = canvas.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let index = 0, mapData = null, width = 0, height = 0, flight = null, frame = 0, stageTimer = null, flightTimer = null;
-  let snapshot = {meta:{...SNAP.meta}, m32:{...SNAP.m32}};
-  const num = n => new Intl.NumberFormat('en-GB').format(n);
+  let snapshot = {meta:{...SNAP.meta}, m32:{...SNAP.m32}, m9:{...SNAP.m9}};
+
+  /* --- text ---------------------------------------------------------------
+     A content field is a plain string, or {nl, en} once translated. */
+  const lang = 'en';
+  const t = value => typeof value === 'string' ? value : value == null ? '' : (value[lang] ?? value.en ?? '');
+  const FILLERS = {
+    partners: () => partners.length,
+    nextYear: () => SNAP.family.nextModelYear ?? '—',
+  };
+  const fill = value => t(value).replace(/\{\{(\w+)\}\}/g, (all,key) => FILLERS[key] ? FILLERS[key]() : all);
+
+  /* --- figures ------------------------------------------------------------
+     `d` is what a figure reads: the live-updated snapshot over the static
+     parts of SNAP. Anything null in it renders through tbd(), never a guess;
+     window.journeyMissing lists what the page had to leave blank. */
+  const missing = [];
+  window.journeyMissing = missing;
+  const tbd = label => {
+    if (label && !missing.includes(label)) missing.push(label);
+    return `<span class="tbd">${t(UI.stillToFillIn)}</span>`;
+  };
+  const data = () => ({...SNAP, ...snapshot});
+  /* Fail-safe: Intl formats null as "0", so an unguarded gap would ship as
+     a real-looking zero. A missing number renders as the chip instead. */
+  const num = n => Number.isFinite(n) ? new Intl.NumberFormat('en-GB').format(n) : tbd();
   const icons = () => window.lucide && lucide.createIcons();
-  const tokens = values => `<div class="tokens">${values.map(v=>`<span class="token">${v}</span>`).join('')}</div>`;
-  const plot = (anneal=false) => `<svg class="plot" viewBox="0 0 380 140" role="img" aria-label="${anneal?'Illustrative learning rate schedule':'Illustrative experimental loss curves'}"><path class="axis" d="M25 10V110H365"/><text x="25" y="132">${anneal?'Pretraining':'Training tokens'}</text><text x="365" y="132" text-anchor="end">${anneal?'Annealing':'More compute'}</text>${anneal?'<path stroke="#18775c" d="M25 25H230 Q265 25 280 51L355 105"/><path stroke="#c25a35" stroke-dasharray="3 4" d="M230 12V113"/>':'<path stroke="#18775c" d="M25 15C50 70 75 76 125 86S275 104 355 107"/><path stroke="#c25a35" d="M25 25C60 46 90 70 140 74S260 89 355 94"/>'}</svg>`;
+  const { tokens, plot } = JOURNEY.parts;
+  function stamp() { return `${snapshot.meta.live?t(UI.liveFeed):t(UI.snapshot)} · ${new Date(snapshot.meta.takenAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})}`; }
   function visual(type) {
-    switch(type) {
-      case 'intro': return '<div class="family-label">THE OPENEUROLLM MODEL FAMILY</div><div class="model-family"><div><strong>9B</strong><span>Smallest</span><small>Awaiting annealing</small></div><i data-lucide="arrow-right"></i><div class="family-current"><strong>32B</strong><span>Intermediate</span><small>Training now</small></div><i data-lucide="arrow-right"></i><div><strong>2027</strong><span>Larger model</span><small>Planned</small></div></div><a class="project-link" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">openeurollm.eu <i data-lucide="arrow-up-right"></i></a>';
-      case 'partners': return `${[['research','Universities & research'],['company','Companies'],['hpc','HPC centres']].map(([group,label])=>`<section class="partner-group" aria-label="${label}"><h2>${label}</h2><ul class="partner-grid">${partners.filter(p=>p.group===group).map(p=>`<li><a class="partner-logo" href="${p.href}" target="_blank" rel="noopener noreferrer" title="${p.name}" aria-label="${p.name} (opens in a new tab)"><img src="assets/partners/${p.logo}" alt="${p.name}"></a></li>`).join('')}</ul></section>`).join('')}<a class="project-link" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">Meet the consortium <i data-lucide="arrow-up-right"></i></a><div class="funding-credit"><img src="assets/images/EU-cofounded.webp" alt="Co-funded by the European Union"></div>`;
-      case 'data': return `<div class="data-docs">${Array.from({length:6},()=>'<div class="doc"><i></i><i></i><i></i></div>').join('')}</div>${tokens(['De','▁A','fs','luit','d','ijk'])}<div class="data-stages"><span>Curate</span><span>Clean & deduplicate</span><span>Tokenize & mix</span></div><button class="small-action" id="clean" aria-pressed="false"><i data-lucide="filter"></i><span>Deduplicate sample</span></button>`;
-      case 'scaling': return `${plot()}<div class="legend"><span>Recipe A</span><span>Recipe B</span></div><div class="intro-rule"></div><div class="intro-meta"><div><strong>4,096</strong>32B global batch / sequences</div><div><strong>${snapshot.m32.lr.toExponential(2)}</strong>32B learning rate</div></div>`;
-      case 'nine': return '<div class="prelude-stats"><div><strong>9B</strong><span>parameters</span></div><div><strong>1,024</strong><span>NVIDIA A100 GPUs</span></div></div><a class="project-link" href="https://huggingface.co/openeurollm/prelude" target="_blank" rel="noopener noreferrer">Prelude on Hugging Face <i data-lucide="arrow-up-right"></i></a>';
-      case 'multisynth': return '<div class="synth-flow"><i data-lucide="languages" aria-hidden="true"></i><strong>Multilingual synthesis</strong><i data-lucide="arrow-down" aria-hidden="true"></i><div class="synth-documents" aria-label="Illustrative multilingual documents">'+['EN','NL','FI','IT','ES','…'].map(lang=>'<div class="synth-document"><span>'+lang+'</span><i></i><i></i><i></i></div>').join('')+'</div><span class="visual-caption">Synthetic text for pretraining · illustrative</span></div>';
-      case 'run': return runVisual();
-      case 'step': return `${tokens(['Het','▁weer','▁in'])}<div class="loop-arrows"><span>↓</span><span>↓</span><span>↓</span></div><div class="model-block">OpenEuroLLM · 32B parameters</div><div class="loop-label">NEXT-TOKEN TARGETS</div>${tokens(['▁weer','▁in','▁Nederland'])}<div class="loop-bottom"><span data-phase="0" class="current">Predict</span><span data-phase="1">Loss</span><span data-phase="2">Gradients</span><span data-phase="3">Update ↺</span></div><button class="small-action" id="step-toggle" aria-label="Pause training illustration" title="Pause training illustration" aria-pressed="false"><i data-lucide="pause"></i></button>`;
-      case 'monitor': return `<div class="monitor-readout"><div><strong>${snapshot.m32.loss.toFixed(2)}</strong><small>Loss</small></div><div><strong>${snapshot.m32.gradNorm ?? '—'}</strong><small>Gradient norm</small></div><div><strong>${snapshot.m32.secPerStep}s</strong><small>Per step</small></div></div><div class="model-block">Checkpoint · step ${num(snapshot.m32.lastCheckpointStep)}</div><div class="status-list"><span>Loss & stability</span><span>Performance</span><span>Recovery</span></div><div class="visual-caption">${stamp()}</div>`;
-      case 'anneal': return `${plot(true)}<div class="intro-meta"><div><strong>Lower LR</strong>smaller parameter updates</div><div><strong>Quality mix</strong>final pretraining data</div></div><div class="intro-rule"></div><span class="pill" style="align-self:center">Base model → post-training</span>`;
-      case 'sft': return '<div class="conversation"><div><small>PROMPT · ILLUSTRATIVE</small>Explain pretraining in one sentence.</div><div><small>DEMONSTRATION</small>A model learns patterns in text by repeatedly predicting what comes next.</div></div>';
-      case 'rl': return '<div class="reward-options"><div><strong>RLHF</strong>Human feedback</div><div><strong>RLVR</strong>Verifiable rewards</div></div><div class="loop-label" style="margin-top:23px">GENERATE → SCORE → UPDATE</div>';
-      default: return '';
-    }
+    const figure = JOURNEY.figures[type];
+    if (!figure) return '';
+    return figure({ d: data(), num, tbd, stamp, tokens, plot, partners, groups: JOURNEY.partnerGroups });
   }
-  function stamp() { return `${snapshot.meta.live?'Live feed':'Snapshot'} · ${new Date(snapshot.meta.takenAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})}`; }
-  function runVisual() {
-    const m=snapshot.m32, percent=Math.min(100,Math.max(0,m.step/m.totalSteps*100));
-    return `<div class="run-stats"><div><strong>${num(m.gpus)}</strong>GH200 GPUs</div><div><strong>${num(m.nodes)}</strong>nodes</div><div><strong>${num(m.step)}</strong>steps</div></div><div class="gpu-grid" aria-label="512 nodes, four GPUs per node">${'<i></i>'.repeat(512)}</div><div class="visual-caption">One square = one node · four GPUs</div><div class="progress-label"><strong>${percent.toFixed(1)}% of planned steps</strong><span>${(m.step*m.tokensPerStep/1e12).toFixed(2)}T / ${(m.totalTokens/1e12).toFixed(0)}T tokens</span></div><progress value="${percent}" max="100" aria-label="32B training progress"></progress><div class="visual-caption">${stamp()}</div>`;
+
+  /* The figure's claim tag shares the line with the chapter note, so one
+     line under every figure says what kind of thing it is. */
+  const TAGS = {measured:'Measured', schematic:'Schematic', illustrative:'Illustrative'};
+  function sceneNote(c) {
+    const tag = c.tag ? `<span class="figure-tag" data-tag="${c.tag}">${TAGS[c.tag] ?? c.tag}</span>` : '';
+    const note = fill(c.note);
+    return tag || note ? `<p class="scene-note">${tag}${note}</p>` : '';
   }
+
   function render() {
     clearInterval(stageTimer);
     const c=chapters[index], p=places[c.place];
     $('#scene').dataset.chapter=c.visual;
-    $('#scene').innerHTML=`<div class="scene-kicker"><span class="number">${String(index+1).padStart(2,'0')}</span>${c.kicker}</div><h1>${c.title}</h1><p class="lede">${c.text}</p><div class="visual">${visual(c.visual)}</div><p class="scene-note">${c.note}</p>`;
-    const partners=c.visual==='partners';
-    $('#place').textContent=partners?'Across Europe':p.name;
-    $('#machine').textContent=partners?'One collaboration':p.machine;
-    $('#place-detail').textContent=partners?'Research · Industry · Supercomputing':`Operated by ${p.operator} · ${p.country}`;
+    $('#scene').innerHTML=`<div class="scene-kicker"><span class="number">${String(index+1).padStart(2,'0')}</span>${fill(c.kicker)}</div><h1>${fill(c.title)}</h1><p class="lede">${fill(c.text)}</p><div class="visual">${visual(c.visual)}</div>${sceneNote(c)}`;
+    const partnersChapter=c.visual==='partners';
+    $('#place').textContent=partnersChapter?t(UI.acrossEurope):p.name;
+    $('#machine').textContent=partnersChapter?t(UI.oneCollaboration):p.machine;
+    $('#place-detail').textContent=partnersChapter?t(UI.collaborationSub):`${t(UI.operatedBy)} ${p.operator} · ${t(p.country)}`;
     $('#position').textContent=`${String(index+1).padStart(2,'0')} / ${chapters.length}`;
-    $('#chapter-name').textContent=c.label;
+    $('#chapter-name').textContent=t(c.label);
     $('#prev').disabled=index===0;
-    $('#next span').textContent=index===chapters.length-1?'Back to start':chapters[index+1].place!==c.place?'Next stop':'Continue';
-    $('#next').title=index===chapters.length-1?'Back to start':'Next chapter';
+    $('#next span').textContent=index===chapters.length-1?t(UI.backToStart):chapters[index+1].place!==c.place?t(UI.nextStop):t(UI.continue);
+    $('#next').title=index===chapters.length-1?t(UI.backToStart):t(UI.nextChapter);
     $('#next').setAttribute('aria-label',$('#next').title);
     document.querySelectorAll('[data-chapter]').forEach(b=>{const active=+b.dataset.chapter===index;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
-    document.querySelectorAll('.pin').forEach((b,i)=>b.classList.toggle('active',!partners&&i===c.place));
-    if ($('#clean')) $('#clean').onclick=()=>{const active=$('.visual').classList.toggle('filtered');$('#clean').setAttribute('aria-pressed',String(active));$('#clean span').textContent=active?'Reset sample':'Deduplicate sample';};
+    document.querySelectorAll('.pin').forEach((b,i)=>b.classList.toggle('active',!partnersChapter&&i===c.place));
+    if ($('#clean')) $('#clean').onclick=()=>{const active=$('.visual').classList.toggle('filtered');$('#clean').setAttribute('aria-pressed',String(active));$('#clean span').textContent=active?t(UI.resetSample):t(UI.deduplicate);};
     if ($('#step-toggle')) {
       let phase=0, paused=reduced;
       const button=$('#step-toggle');
-      const paintButton=()=>{button.innerHTML=`<i data-lucide="${paused?'play':'pause'}"></i>`;button.setAttribute('aria-pressed',String(paused));button.title=paused?'Resume training illustration':'Pause training illustration';button.setAttribute('aria-label',button.title);icons();};
+      const paintButton=()=>{button.innerHTML=`<i data-lucide="${paused?'play':'pause'}"></i>`;button.setAttribute('aria-pressed',String(paused));button.title=paused?t(UI.resumeFigure):t(UI.pauseFigure);button.setAttribute('aria-label',button.title);icons();};
       stageTimer=setInterval(()=>{if(paused||document.hidden)return;phase=(phase+1)%4;document.querySelectorAll('[data-phase]').forEach(n=>n.classList.toggle('current',+n.dataset.phase===phase));},1300);
       button.onclick=()=>{paused=!paused;paintButton();};paintButton();
     }
@@ -141,15 +125,15 @@
       mapData.features.forEach(feature=>{const geometry=feature.geometry;if(!geometry)return;const polygons=geometry.type==='Polygon'?[geometry.coordinates]:geometry.type==='MultiPolygon'?geometry.coordinates:[];polygons.forEach(polygon=>{ctx.beginPath();polygon.forEach(ring=>{ring.forEach((coord,i)=>{const p=project(coord[0],coord[1]);if(i===0)ctx.moveTo(...p);else ctx.lineTo(...p);});ctx.closePath();});ctx.fill('evenodd');ctx.stroke();});});
     }
     ctx.setLineDash([3,6]);ctx.strokeStyle='#52768b';ctx.lineWidth=1;
-    for(let i=0;i<4;i++)route(i,i+1);ctx.setLineDash([]);
+    for(let i=0;i<places.length-1;i++)route(i,i+1);ctx.setLineDash([]);
     if(flight){ctx.strokeStyle='#ef8700';ctx.lineWidth=2;const p=route(flight.from,flight.to,flight.t||0);ctx.fillStyle='#ef8700';ctx.beginPath();ctx.arc(...p,6,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ef870030';ctx.lineWidth=10;ctx.stroke();}
     document.querySelectorAll('.pin').forEach((pin,i)=>{const p=project(places[i].lon,places[i].lat);pin.style.left=`${p[0]-6}px`;pin.style.top=`${p[1]-6}px`;});
   }
   function resize(){width=innerWidth;height=innerHeight;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw();}
-  places.forEach((p,i)=>{const b=document.createElement('button');b.className='pin';b.title=p.name;b.setAttribute('aria-label',`${p.name}: ${chapters[p.chapter].label}`);b.innerHTML=`<span>${p.name}</span>`;b.onclick=()=>go(p.chapter);$('#pins').append(b);});
+  places.forEach((p,i)=>{const b=document.createElement('button');b.className='pin';b.title=p.name;b.setAttribute('aria-label',`${p.name}: ${t(chapters[p.chapter].label)}`);b.innerHTML=`<span>${p.name}</span>`;b.onclick=()=>go(p.chapter);$('#pins').append(b);});
   chapters.forEach((c,i)=>{
-    const b=document.createElement('button');b.dataset.chapter=i;b.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${c.label}<small>${['sft','rl'].includes(c.visual)?'To come':c.visual==='partners'?'Across Europe':`${places[c.place].machine} · ${places[c.place].operator}`}</small></span>`;b.onclick=()=>go(i);$('#chapter-list').append(b);
-    const dot=document.createElement('button');dot.dataset.chapter=i;dot.title=c.label;dot.setAttribute('aria-label',c.label);dot.onclick=()=>go(i);$('#timeline').append(dot);
+    const b=document.createElement('button');b.dataset.chapter=i;b.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${t(c.label)}<small>${['sft','rl'].includes(c.visual)?t(UI.toCome):c.visual==='partners'?t(UI.acrossEurope):`${places[c.place].machine} · ${places[c.place].operator}`}</small></span>`;b.onclick=()=>go(i);$('#chapter-list').append(b);
+    const dot=document.createElement('button');dot.dataset.chapter=i;dot.title=t(c.label);dot.setAttribute('aria-label',t(c.label));dot.onclick=()=>go(i);$('#timeline').append(dot);
   });
   $('#prev').onclick=()=>go(index-1);$('#next').onclick=()=>go((index+1)%chapters.length);
   $('#menu-toggle').onclick=()=>menu($('#chapters').hidden);
@@ -160,7 +144,7 @@
   window.addEventListener('resize',resize);
   const requested=Number(location.hash.replace('#chapter-',''))-1;if(Number.isInteger(requested)&&requested>=0&&requested<chapters.length)index=requested;
   resize();render();
-  fetch('assets/europe-countries.geojson').then(r=>{if(!r.ok)throw Error('Map unavailable');return r.json();}).then(data=>{mapData=data;draw();}).catch(()=>{$('.map-credit').textContent='Map unavailable · Journey locations remain selectable';});
+  fetch('assets/europe-countries.geojson').then(r=>{if(!r.ok)throw Error('Map unavailable');return r.json();}).then(data=>{mapData=data;draw();}).catch(()=>{$('.map-credit').textContent=t(UI.mapUnavailable);});
   async function poll(){
     try{
       const response=await fetch('live.json',{cache:'no-store'});if(!response.ok)return;
@@ -171,7 +155,7 @@
       const merged={...snapshot.m32,...m};
       if(positive.some(k=>!Number.isFinite(merged[k])||merged[k]<=0)||nonnegative.some(k=>!Number.isFinite(merged[k])||merged[k]<0))return;
       if(merged.gradNorm!=null&&!Number.isFinite(merged.gradNorm))return;
-      snapshot={meta:{takenAt:live.meta.takenAt,live:live.meta.live===true},m32:merged};
+      snapshot={meta:{takenAt:live.meta.takenAt,live:live.meta.live===true},m32:merged,m9:{...snapshot.m9,...live.m9}};
       if(!flight&&['run','monitor','scaling'].includes(chapters[index].visual))render();
     }catch{/* Keep the last valid, timestamped snapshot when the feed is unavailable. */}
   }

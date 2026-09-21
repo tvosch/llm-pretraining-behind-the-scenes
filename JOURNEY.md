@@ -5,11 +5,43 @@ The original process view is available as `process.html`.
 
 ## Files
 
-- `assets/journey.js`: chapters, interactions, canvas geography and live feed.
+- `assets/journey-content.js`: **the file to edit.** Chapters, copy, figures,
+  partners, places and interface strings. Nothing else holds copy.
+- `assets/journey.js`: the engine — map, navigation, figure context, live feed.
+  No copy, no numbers.
+- `assets/data.js`: every number, shared with the process view. `null` renders
+  as the orange "still to fill in" chip, never as a guess.
 - `assets/journey.css`: responsive chapter bubbles and navigation.
-- `assets/data.js`: shared run snapshot. No counters are extrapolated.
 - `live.json`: optional feed, polled every 15 minutes. Missing or invalid
   updates leave the last valid snapshot visible with its timestamp.
+
+## Adding a chapter
+
+Append an entry to `JOURNEY.chapters` in `journey-content.js`:
+
+```js
+{
+  place: 4,                        // index into JOURNEY.places
+  label: 'Evaluation',             // chapter menu and footer
+  kicker: 'JUPITER · JSC / Tests',
+  title: 'Does it<br>actually work?',
+  text: 'One or two sentences.',   // or {nl, en} once translated
+  note: 'Caveats and limits.',
+  visual: 'evaluation',            // a key in JOURNEY.figures, or '' for none
+  tag: 'measured',                 // measured | schematic | illustrative | null
+}
+```
+
+Then add `evaluation: ({ d, num, tbd }) => \`...\`` to `JOURNEY.figures`. The
+figure receives `d` (the numbers), `num`, `tbd`, `stamp`, `tokens`, `plot`,
+`partners` and `groups`. Read numbers off `d` — a literal in a figure becomes a
+second source of truth and goes stale silently. `num()` returns the chip rather
+than `0` for a missing value, so a forgotten guard fails safe.
+
+`{{partners}}` and `{{nextYear}}` in any text field are filled from the real
+partner count and `SNAP.family.nextModelYear`.
+
+`window.journeyMissing` lists every gap the current chapter had to leave blank.
 
 Chapters can be linked directly, e.g. `#chapter-7` for the 32B run.
 Arrow keys navigate; the menu and map pins also select chapters. Reduced-motion

@@ -71,3 +71,10 @@ progress::-webkit-progress-bar{background:#223340}progress::-webkit-progress-val
 }
 @media(max-width:360px){.brand>span{display:none}.model-family strong{font-size:26px}.partner-grid{gap:8px 6px}.partner-grid li{flex-basis:calc((100% - 30px)/6)}.prelude-stats{gap:24px}.prelude-stats strong{font-size:37px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* Figure claim tag (measured / schematic / illustrative) and the orange
+   "still to fill in" chip that any null in data.js renders as. */
+.figure-tag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);border-radius:10px;padding:2px 7px;margin-right:8px;color:var(--muted);vertical-align:1px}
+.figure-tag[data-tag="measured"]{color:var(--blue);border-color:#2ba8ff55}
+.figure-tag[data-tag="illustrative"]{color:var(--orange);border-color:#ef870055}
+.tbd{display:inline-block;font-size:10px;font-weight:600;line-height:1.6;color:var(--orange);background:#ef870014;border:1px dashed #ef870088;border-radius:4px;padding:1px 7px;letter-spacing:0;text-transform:none;white-space:nowrap}

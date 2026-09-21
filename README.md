@@ -22,6 +22,8 @@ process map. This directory is the published site: see **Deployment** below.
 | `assets/process.js` | The opening diagram. Exports `window.drawPretrainingProcess(host, ui)`. |
 | `assets/app.js` | Renders content against data: the fold, the detail panels, the interactives. |
 | `assets/style.css` | Design tokens and layout. |
+| `assets/journey-content.js` | The journey's chapters, copy and figures — see `JOURNEY.md`. |
+| `assets/journey.js` | The journey's engine: map, navigation, live feed. Holds no copy. |
 
 ## How it works
 
