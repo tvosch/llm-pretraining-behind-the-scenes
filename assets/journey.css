@@ -116,3 +116,7 @@ progress::-webkit-progress-bar{background:#223340}progress::-webkit-progress-val
 .incident--empty{border:1px dashed #a6c2d63d;border-radius:6px;padding:13px;gap:9px}
 .incident-label{font-size:10px;color:var(--muted)}
 #scene[data-chapter="step"] .visual,#scene[data-chapter="monitor"] .visual{gap:11px;max-width:430px;margin-top:16px}
+
+/* The annealing figure ends with a pill; keep it clear of the chapter note. */
+#scene[data-chapter="anneal"] .visual{gap:12px;margin-bottom:6px}
+#scene[data-chapter="anneal"] .intro-rule{margin:6px auto}
