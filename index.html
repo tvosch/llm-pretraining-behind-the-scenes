@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#02090f">
+  <meta name="color-scheme" content="dark">
+  <title>A life in pretraining · OpenEuroLLM</title>
+  <link rel="stylesheet" href="assets/journey.css?v=20260921-4">
+  <script defer src="assets/lucide.min.js"></script>
+  <script defer src="assets/data.js"></script>
+  <script defer src="assets/journey.js?v=20260921-3"></script>
+</head>
+<body>
+  <canvas id="europe" aria-label="Map of Europe showing Amsterdam, Kajaani, Barcelona, Bologna and Jülich"></canvas>
+  <header>
+    <a class="brand" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer" aria-label="OpenEuroLLM project website (opens in a new tab)"><img src="assets/openeurollm-logo.svg" alt="OpenEuroLLM" width="134" height="61"><span>A LIFE IN<br>PRETRAINING</span></a>
+    <nav aria-label="Page navigation">
+      <button id="overview" title="Europe overview" aria-label="Europe overview" aria-pressed="false"><i data-lucide="map"></i></button>
+      <button id="menu-toggle" aria-label="Chapters" title="Chapters" aria-expanded="false" aria-controls="chapters"><i data-lucide="menu"></i></button>
+    </nav>
+  </header>
+  <div id="map-label"><span class="eyebrow">A EUROPEAN JOURNEY</span><strong id="place">Amsterdam</strong><strong id="machine">Snellius</strong><span id="place-detail">Operated by SURF · The Netherlands</span></div>
+  <div id="pins" aria-label="Journey locations"></div>
+  <main id="scene" aria-live="polite" aria-atomic="true"></main>
+  <aside id="chapters" hidden aria-label="Chapters"><div class="menu-heading">The journey<button id="menu-close" aria-label="Close chapters" title="Close chapters"><i data-lucide="x"></i></button></div><div id="chapter-list"></div><a href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">openeurollm.eu <i data-lucide="arrow-up-right"></i></a><a href="process.html">Open the original process map <i data-lucide="arrow-up-right"></i></a></aside>
+  <div id="travel" aria-live="polite"></div>
+  <footer>
+    <div class="chapter-position"><span id="position">01 / 11</span><span id="chapter-name">A life in pretraining</span></div>
+    <div id="timeline" aria-label="Choose a chapter"></div>
+    <div class="navigation"><button id="prev" title="Previous chapter" aria-label="Previous chapter"><i data-lucide="arrow-left"></i></button><button id="next" title="Next chapter" aria-label="Next chapter"><span>Next stop</span><i data-lucide="arrow-right"></i></button></div>
+  </footer>
+  <div class="map-credit">Map: Natural Earth · Routes are illustrative</div>
+  <noscript>This interactive journey needs JavaScript. <a href="process.html">Visit the original site.</a></noscript>
+</body>
+</html>

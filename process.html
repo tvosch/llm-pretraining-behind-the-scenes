@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="nl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training OpenEuroLLM</title>
+<meta name="description" content="Een kijkje in mijn werk aan OpenEuroLLM: data, schaalexperimenten en de training van onze 9B- en 32B-modellen op Europese supercomputers.">
+<meta name="color-scheme" content="dark light">
+<meta property="og:title" content="Training OpenEuroLLM">
+<meta property="og:description" content="Binnen het trainingsproject: mijn werk, onze modellen en gemeten voortgang op Europese supercomputers.">
+<meta property="og:type" content="article">
+
+<script>
+  /* Stamp the theme before first paint so there is no flash. Dark is the default. */
+  (function () {
+    try {
+      var s = localStorage.getItem("oellm.theme") || "dark";
+      if (s === "auto") document.documentElement.removeAttribute("data-theme");
+      else document.documentElement.setAttribute("data-theme", s);
+    } catch (e) { document.documentElement.setAttribute("data-theme", "dark"); }
+  })();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=20260920-3">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%233987e5'/><rect x='6' y='13' width='5' height='6' rx='1.5' fill='%23fff'/><rect x='13.5' y='11' width='5' height='10' rx='1.5' fill='%23fff' opacity='.7'/><rect x='21' y='9' width='5' height='14' rx='1.5' fill='%23fff' opacity='.45'/></svg>">
+</head>
+<body>
+
+<a class="skip" href="#canvas" id="skip">Naar de inhoud</a>
+
+<header class="topbar">
+  <div class="topbar__in">
+    <a class="brand" href="#/" id="brandlink">
+      <span class="brand__dot" id="branddot"></span>
+      <span id="brandname">Hoe een taalmodel wordt getraind</span>
+    </a>
+    <div class="topbar__spacer"></div>
+    <div id="toptick"></div>
+    <div class="switch" id="langsw" role="group" aria-label="Taal">
+      <button type="button" data-v="nl">NL</button>
+      <button type="button" data-v="en">EN</button>
+    </div>
+    <div class="switch" id="themesw" role="group" aria-label="Thema">
+      <button type="button" data-v="dark" title="Donker">☾</button>
+      <button type="button" data-v="light" title="Licht">☀</button>
+      <button type="button" data-v="auto" title="Automatisch">A</button>
+    </div>
+  </div>
+</header>
+
+<main id="canvas">
+  <div class="wrap">
+    <section id="intro"></section>
+    <section id="pipe" aria-label="Het pretrainingsproces"></section>
+    <section id="detail" aria-live="polite"></section>
+    <section id="acts"></section>
+    <footer id="foot"></footer>
+  </div>
+</main>
+
+<noscript>
+  <div class="wrap" style="padding:3rem 0">
+    <h1>Hoe een taalmodel wordt getraind</h1>
+    <p>Deze pagina is een interactief schema en heeft JavaScript nodig.</p>
+    <p>This page is an interactive diagram and needs JavaScript.</p>
+  </div>
+</noscript>
+
+<script src="assets/data.js?v=20260920-3"></script>
+<script src="assets/content.js?v=20260920-3"></script>
+<script src="assets/process.js?v=20260920-3"></script>
+<script src="assets/app.js?v=20260920-3"></script>
+</body>
+</html>
