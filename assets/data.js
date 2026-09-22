@@ -28,10 +28,19 @@ const SNAP = {
      than a drawn stand-in, because a made-up spike would defeat the point. */
   incidents: {
     lossSpike: {
-      image: null,     // e.g. "assets/images/32b-loss-spike.png"
-      alt: null,       // what a screen reader should hear
-      caption: null,   // one line: what happened, and when
+      image: "assets/images/32b-v1-loss-increase.png",
+      alt: "Earlier 32B v1 run: language-model loss decreases before turning upward around step 67,000. A second panel shows output z-loss.",
+      caption: "Earlier run: 32B v1. Loss starts rising instead of falling, a warning sign of divergence. The curves alone do not identify the cause; this is not the current run.",
     },
+  },
+
+  /* -------------------------------------------- the scaling experiments */
+  /* The small runs behind the 32B recipe. `verified: false` means these are
+     the team's own figures rather than something read off a log. */
+  experiments: {
+    verified: false,
+    smallRuns: 100000,   // how many small training runs were done
+    gpuHours: null,      // what they cost in GPU-hours
   },
 
   /* ------------------------------------------------------ the model family */
@@ -91,7 +100,7 @@ const SNAP = {
     secPerStep: null,
     loss: null,
     gpus: 1024,
-    gpuType: "NVIDIA A100",
+    gpuType: "NVIDIA A100 64GB",
     startedAt: "2026-06-12",
     weightsUrl: "https://huggingface.co/openeurollm/prelude",
   },

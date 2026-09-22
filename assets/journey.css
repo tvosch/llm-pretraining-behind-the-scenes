@@ -110,6 +110,12 @@ progress::-webkit-progress-bar{background:#223340}progress::-webkit-progress-val
 .watch-stats{display:flex;justify-content:center;gap:34px;text-align:center}
 .watch-stats strong{display:block;font-size:20px;font-family:Roboto,Arial,sans-serif;margin-bottom:3px}
 .watch-stats small{font-size:10px;color:var(--muted)}
+.watch-unavailable{font-size:12px;font-weight:400;color:var(--muted)}
+.babysit-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0 30px}
+.babysit-flow>div{display:flex;flex-direction:column;align-items:center;gap:10px}
+.babysit-flow svg.lucide{width:28px;height:28px;color:var(--orange)}
+.babysit-flow strong{font-size:13px}
+.babysit-flow span{font-size:11px;line-height:1.5;color:var(--muted)}
 .incident{margin:0;display:flex;flex-direction:column;gap:8px;align-items:center}
 .incident img{width:100%;border:1px solid var(--line);border-radius:6px;display:block}
 .incident figcaption{font-size:10.5px;line-height:1.5;color:var(--muted);text-align:center}
@@ -154,3 +160,40 @@ progress::-webkit-progress-bar{background:#223340}progress::-webkit-progress-val
    and lands on the lede above and the note below. Let the scene scroll
    instead - that is what the overflow rule above is for. */
 #scene>*{flex-shrink:0}
+
+#scene[data-chapter="incident"] .visual{gap:12px;max-width:460px}
+.loss-replay{display:block;width:100%;aspect-ratio:960 / 540;overflow:hidden;background:white;border-radius:4px}
+.loss-replay img{width:200%;max-width:none;border:0;border-radius:0;clip-path:inset(0 calc(100% - var(--reveal,100%) / 2) 0 0)}
+.replay-controls{display:flex;align-items:center;gap:12px;text-align:left;min-height:48px}
+.replay-controls button{flex-shrink:0;width:38px;height:38px}
+#loss-status{font-size:12px;margin:0;color:var(--muted)}
+#loss-status.loss-alert{color:var(--orange);font-weight:600}
+.incident-checks{border:0;padding:0;margin:0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.incident-checks legend{font-size:12px;margin:0 auto 10px;padding:0}
+.incident-checks button{border-radius:4px;width:auto;height:36px;padding:0 12px;font-size:11px}
+.incident-checks button[aria-pressed="true"]{border-color:var(--orange);color:var(--orange)}
+#incident-answer{font-size:12px;line-height:1.6;color:var(--muted);min-height:78px;margin:0}
+
+/* A real machine accompanies each map stop without obscuring the diagram. */
+#machine-photo{position:relative;width:min(23vw,230px);margin:10px 0 0;transition:opacity .3s;pointer-events:auto;grid-column:1 / -1}
+#machine-photo[hidden]{display:none}
+#machine-photo a{display:block}
+#machine-photo img{display:block;width:auto;max-width:100%;height:110px;object-fit:contain;border-radius:4px}
+#machine-photo figcaption{margin-top:8px;font-size:11px;color:var(--muted)}
+body.overview #machine-photo,body.travelling #machine-photo{opacity:0;pointer-events:none}
+@media(max-width:700px){
+  #machine-photo{width:100%;margin:10px 0 0}
+  #machine-photo img{height:90px;object-position:left center}
+  body.overview #machine-photo,body.travelling #machine-photo{display:none}
+}
+
+/* ---- what goes wrong, and the token ticker ----------------------------- */
+.causes{display:flex;flex-direction:column;gap:4px;width:100%}
+.cause{display:grid;grid-template-columns:1fr 92px 34px;align-items:center;gap:9px;font-size:10px;color:var(--muted)}
+.cause i{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--blue),#2ba8ff55);justify-self:end;min-width:3px}
+.cause span{text-align:left}
+.cause b{font-weight:600;color:var(--ink);text-align:right}
+.causes-note{font-size:10px;line-height:1.5;color:var(--muted);margin:0;text-align:center}
+.ticker{font-size:11.5px;line-height:1.6;color:var(--muted);margin:0;text-align:center}
+.ticker strong{display:block;font-size:23px;color:var(--ink);font-variant-numeric:tabular-nums;margin:2px 0}
+.ticker small{display:block;font-size:9.5px;opacity:.75}

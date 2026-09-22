@@ -37,7 +37,7 @@
 
   const canvas = $('#europe'), ctx = canvas.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let index = 0, mapData = null, width = 0, height = 0, flight = null, frame = 0, stageTimer = null, flightTimer = null;
+  let index = 0, mapData = null, width = 0, height = 0, flight = null, frame = 0, stageTimer = null, flightTimer = null, tickerTimer = null;
   let snapshot = {meta:{...SNAP.meta}, m32:{...SNAP.m32}, m9:{...SNAP.m9}};
 
   /* --- text ---------------------------------------------------------------
@@ -89,6 +89,7 @@
 
   function render() {
     clearInterval(stageTimer);
+    clearInterval(tickerTimer);
     const c=chapters[index], p=places[c.place];
     $('#scene').dataset.chapter=c.visual;
     $('#scene').innerHTML=`<div class="scene-kicker"><span class="number">${String(index+1).padStart(2,'0')}</span>${fill(c.kicker)}</div><h1>${fill(c.title)}</h1><p class="lede">${fill(c.text)}</p><div class="visual">${visual(c.visual)}</div>${sceneNote(c)}`;
@@ -96,6 +97,15 @@
     $('#place').textContent=partnersChapter?t(UI.acrossEurope):p.name;
     $('#machine').textContent=partnersChapter?t(UI.oneCollaboration):p.machine;
     $('#place-detail').textContent=partnersChapter?t(UI.collaborationSub):`${t(UI.operatedBy)} ${p.operator} · ${t(p.country)}`;
+    const photo=$('#machine-photo');
+    const photos=['snellius.png','lumi.jpg','marenostrum5.png','leonardo.jpg','jupiter.jpeg'];
+    photo.hidden=partnersChapter||['sft','rl'].includes(c.visual);
+    const photoUrl=`assets/images/${photos[c.place]}`;
+    photo.querySelector('img').src=photoUrl;
+    photo.querySelector('img').alt=`${p.machine}, operated by ${p.operator}`;
+    photo.querySelector('a').href=photoUrl;
+    photo.querySelector('a').setAttribute('aria-label',`View full photograph of ${p.machine} (opens in a new tab)`);
+    photo.querySelector('figcaption').textContent=`${p.machine} · ${p.operator}`;
     $('#position').textContent=`${String(index+1).padStart(2,'0')} / ${chapters.length}`;
     $('#chapter-name').textContent=t(c.label);
     $('#prev').disabled=index===0;
@@ -123,6 +133,56 @@
       document.querySelectorAll('.loop-bottom [data-phase]').forEach(b=>{b.onclick=()=>{phase=+b.dataset.phase;paused=true;paintPhase();paintButton();};});
       stageTimer=setInterval(()=>{if(paused||document.hidden)return;phase=(phase+1)%4;paintPhase();},2600);
       button.onclick=()=>{paused=!paused;paintButton();};paintButton();paintPhase();
+    }
+    if ($('#loss-play')) {
+      const plot=$('.loss-replay'), button=$('#loss-play'), status=$('#loss-status');
+      let progress=1, playing=false;
+      const paint=()=>{
+        plot.style.setProperty('--reveal', `${progress*100}%`);
+        status.textContent=progress<.85?'Loss is falling: predictions are improving.':'Loss is rising. Is that normal?';
+        status.classList.toggle('loss-alert',progress>=.85);
+        button.innerHTML=`<i data-lucide="${playing?'pause':progress>=1?'rotate-ccw':'play'}"></i>`;
+        button.title=playing?'Pause plot reveal':progress>=1?'Replay recorded plot':'Resume plot reveal';
+        button.setAttribute('aria-label',button.title);icons();
+      };
+      button.onclick=()=>{
+        if(progress>=1)progress=0;
+        playing=!playing;paint();
+      };
+      // This reveals recorded pixels, not reconstructed measurements or a live alert.
+      stageTimer=setInterval(()=>{
+        if(!playing||document.hidden)return;
+        progress=Math.min(1,progress+.0125);
+        if(progress>=1)playing=false;
+        paint();
+      },100);
+      if(!reduced){progress=0;playing=true;paint();}
+      const answers={
+        data:'Did the batch mix or source change? Harder text can raise loss without implying a broken model. Compare batches and held-out evaluations.',
+        gradients:'Did gradient norms spike or become non-finite? Inspect them alongside loss and numerical diagnostics for signs of unstable updates.',
+        changes:'What changed near the reversal: learning rate, precision, code, or a resumed checkpoint? Align the logs before attributing a cause.'
+      };
+      document.querySelectorAll('[data-check]').forEach(b=>{b.onclick=()=>{
+        document.querySelectorAll('[data-check]').forEach(other=>other.setAttribute('aria-pressed',String(other===b)));
+        $('#incident-answer').textContent=answers[b.dataset.check];
+      };});
+    }
+    /* Counts tokens against the measured rate for as long as the page is
+       open. An estimate, and the figure says so; it stops counting while the
+       tab is hidden rather than pretending to have watched. */
+    const ticker = $('#token-ticker');
+    if (ticker) {
+      const m = snapshot.m32, rate = m.tokensPerStep / m.secPerStep;
+      if (Number.isFinite(rate) && rate > 0) {
+        let counted = 0, since = performance.now();
+        const paint = () => {
+          const now = performance.now();
+          if (!document.hidden) counted += (now - since) / 1000 * rate;
+          since = now;
+          ticker.textContent = new Intl.NumberFormat('en-GB').format(Math.round(counted));
+        };
+        paint(); tickerTimer = setInterval(paint, 1000);
+      }
     }
     icons();draw();
   }
