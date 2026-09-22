@@ -434,10 +434,10 @@ JOURNEY.figures = {
       <div><strong>${count(d.cluster.failuresTotal)}</strong><small>Node failures</small></div>
     </div>
     ${odds ? `<p class="at-risk">Even if a single GPU only fails once in ${d.cluster.mtbfYearsDefault} years, ${num(d.m32.gpus)} of them together means one about <strong>every ${odds}</strong>. Nothing takes over when it does.</p>` : ''}
-    <div class="causes" aria-label="What typically goes wrong">
+    <div class="causes" aria-label="What typically goes wrong on a cluster this size, not this run's own record">
+      <p class="causes-note">What typically breaks · not this run's own record</p>
       ${d.cluster.causes.map(cause => `<div class="cause"><i style="width:${(cause.share * 100).toFixed(0)}%"></i><span>${JOURNEY.failureCauses[cause.id] ?? cause.id}</span><b>${Math.round(cause.share * 100)}%</b></div>`).join('')}
-    </div>
-    <p class="causes-note">Typical proportions for a cluster this size, not this run's own record.</p>`;
+    </div>`;
   },
 
   incident: ({ d, tbd }) => {
