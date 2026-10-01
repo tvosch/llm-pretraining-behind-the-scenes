@@ -39,60 +39,60 @@ JOURNEY.places = [
 JOURNEY.chapters = [
   {
     place: 0,
-    label: 'Behind the scenes',
-    kicker: 'Snellius · SURF / OpenEuroLLM',
-    title: 'Behind the scenes<br>of LLM pretraining.',
-    text: 'From SURF in Amsterdam to Europe’s supercomputers: the data, experiments and training behind the OpenEuroLLM model family.',
-    note: 'OpenEuroLLM aims: truly open · EU-compliant · linguistically diverse.',
-    visual: 'intro',
-    tag: 'schematic',
+    label: 'Meet your guide',
+    kicker: 'A personal view / From SURF to European HPC',
+    title: 'Behind the scenes of training a European LLM',
+    text: 'What does it take to train a large language model from scratch? Who does the work, and what happens when something breaks?',
+    note: '',
+    visual: 'welcome',
+    tag: null,
   },
   {
     place: 0,
-    label: 'The project partners',
-    kicker: 'OpenEuroLLM / The collaboration',
-    title: 'Built across Europe.',
-    text: '{{partners}} partners. A series of foundation models for transparent AI in Europe.',
+    label: 'The OpenEuroLLM project',
+    kicker: 'Snellius · SURF / OpenEuroLLM',
+    title: 'The OpenEuroLLM<br>model family.',
+    text: '<a href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">OpenEuroLLM</a> is developing a family of open language models for European languages. This journey takes us through the full process of pretraining an LLM, from preparing the data and testing the recipe to training and refining the final base model.',
     note: '',
-    visual: 'partners',
-    tag: 'measured',
+    visual: 'intro',
+    tag: null,
   },
   {
     place: 1,
     label: 'Preparing the data',
     kicker: 'LUMI · CSC / Data preparation',
     title: 'Before the model,<br>the data.',
-    text: 'Curate, clean, deduplicate. Our training mix includes HPLT 3/4 multilingual data from our HPLT partners.',
-    note: 'Preparing data for EU-compliant training means checking source rights, personal data and documentation, alongside quality and overlap with evaluation sets.',
+    text: 'Our first stop beyond Amsterdam is Kajaani, Finland, home of LUMI, the supercomputer run by CSC.<br><br>Data is arguably the most important ingredient in training a language model. We collect and acquire <a href="https://github.com/OpenEuroLLM/training-data-collection/tree/main/flag" target="_blank" rel="noopener noreferrer" title="View the full list of data collections">datasets across 36 European languages and sources</a>.<br><br>One of these collections comes from our partners in the <a href="https://hplt-project.org/" target="_blank" rel="noopener noreferrer">HPLT project</a>: web documents drawn from the <a href="https://archive.org/" target="_blank" rel="noopener noreferrer">Internet Archive</a> and <a href="https://commoncrawl.org/" target="_blank" rel="noopener noreferrer">Common Crawl</a>. <a href="https://hplt-project.org/datasets/v3.0" target="_blank" rel="noopener noreferrer">HPLT 3.0</a> covers 198 language-script combinations.',
+    note: '',
     visual: 'data',
-    tag: 'illustrative',
+    tag: null,
   },
   {
     place: 1,
     label: 'Tokenization',
     kicker: 'LUMI · CSC / Text into tokens',
     title: 'Every language<br>counts.',
-    text: 'A tokenizer splits text into pieces the model can process. We train ours for efficient coverage of European languages: fewer tokens for the same text.',
-    note: 'Some languages need more tokens to express the same meaning: a tokenization tax. Better coverage helps more text fit into the same context window.',
+    text: 'Before leaving Finland, we turn text into pieces the model can process: tokens. The process of decomposing human-readable text into a fixed set of numbers is called tokenization. We convert text into a fixed vocabulary of numerical IDs such that the model can perform all kinds of operations on them.<br><br>We train our own tokenizer for efficient coverage of European languages. Its vocabulary contains 262,144 pieces. That is different from context length: the vocabulary describes which pieces are available, while context length limits how many fit together that the LLM sees at once. More tokens means better coverage and more efficient text processing (and cheaper!). The trade-off is that more tokens also introduces more learnable parameters.',
+    note: '',
     visual: 'tokenization',
-    tag: 'measured',
+    tag: null,
   },
   {
     place: 2,
     label: 'Scaling experiments',
     kicker: 'MareNostrum 5 · BSC / Experiments',
     title: 'Small runs.<br>Big decisions.',
-    text: 'Experiments help us choose the global batch size and learning rate. Scaling laws connect model size, data and compute to the bigger training budget.',
-    note: 'Curves are not measured experiment results.',
+    text: 'From chilly Finland to sunny Barcelona. With the data prepared, we need a model architecture and the key training settings, or hyperparameters, that influence how quickly and how well the model learns. We also need a data mix that balances language coverage and performance within our compute and time budget.<br><br>A large run is too expensive for trial and error, so we run around {{smallRuns}} small ones and compare recipes. Scaling laws predict how the results change as model size, data and compute grow, and we use those predictions to choose the settings for the big run.',
+    note: '',
     visual: 'scaling',
-    tag: 'illustrative',
+    tag: null,
   },
   {
     place: 3,
     label: 'Prelude · 9B',
     kicker: 'Leonardo · Cineca / Pretraining',
     title: 'Prelude.',
-    text: 'Our first, smallest proof-of-concept model: 9B parameters, trained on 10 trillion tokens on Leonardo in Bologna. A first test of the recipe before scaling up.',
+    text: 'Keeping the Mediterranean vibes, we head to Bologna for our first “baby” model: Prelude. It is a sanity check before going bigger, but small is relative: this run took more than a month on 1,024 GPUs.<br><br>We bring the data prepared in Finland to Italy, take the training settings from our experiments in Spain, check that the software works end to end, and start training on Leonardo. The result is our smallest model: 9 billion parameters, trained on 10 trillion tokens.',
     note: 'Pretrained · awaiting annealing.',
     visual: 'nine',
     tag: 'measured',
@@ -102,39 +102,49 @@ JOURNEY.chapters = [
     label: 'MultiSynt · synthetic data',
     kicker: 'Leonardo · Cineca / Multilingual data',
     title: 'MultiSynt.',
-    text: 'MultiSynt: an open multilingual synthetic dataset for LLM pre-training. Developed on Leonardo in Bologna.',
-    note: 'More project details to follow.',
+    text: 'While we are in Bologna, let’s look at the challenge of medium- and low-resource languages. There is plenty of text written originally in English on the internet. For European languages such as Albanian or Maltese, much less digitized text is available. That makes it harder to gather enough training material.<br><br>MultiSynt is an open multilingual synthetic dataset for LLM pre-training. The MultiSynt/MT work translates existing text into 36 languages to enrich their training data. Leonardo runs the large-model translation pipeline, while a complementary translation pipeline runs on LUMI.',
+    note: '',
     visual: 'MultiSynt',
-    tag: 'illustrative',
+    tag: null,
   },
   {
     place: 4,
     label: 'The 32B run',
     kicker: 'JUPITER · JSC / Training',
     title: 'Now, 32 billion.',
-    text: '32 billion parameters: the adjustable numbers inside our dense model. Training takes roughly 50 days of compute, if we can keep the GPUs running.',
-    note: 'We share JUPITER with other users. Slurm, the job scheduler, queues requests and allocates resources. Waiting for our next slot can make the calendar time longer. Progress shows completed training steps, not model quality.',
+    text: 'Next stop: Jülich, Germany. On JUPITER, we scale up to 32 billion parameters, the adjustable numbers inside our dense model. This is the middle child of the OpenEuroLLM family. More advanced models are yet to come!<br><br>Now {{gpus}} newer GPUs work together. The model and its training state are too big for a single GPU, so each copy is split across {{replicaGpus}} GPUs, and {{replicas}} copies run side by side, each on different text. At every update, the copies synchronize their gradients so they keep working from the same model. At full speed and without interruption, pretraining takes about {{trainDays}} days of continuous compute.<br><br>The numbers below come from a snapshot of the running job; the timestamp says when it was taken. Tokens per second shows how fast the model processes text; the progress bar shows how much of the planned token budget it has processed.',
+    note: '',
     visual: 'run',
-    tag: 'measured',
+    tag: null,
   },
   {
     place: 4,
     label: 'One training step',
     kicker: 'JUPITER · JSC / Inside a step',
     title: 'How a model<br>actually learns.',
-    text: 'The training text supplies its own targets: the next tokens. Predict their probabilities, calculate a loss, then update the model.',
-    note: 'Simplified tokens and invented predictions. Training predicts many positions in parallel; generating text usually proceeds one token at a time.',
+    text: 'What are all those GPUs doing? We give the model text and ask it to predict, token by token, what comes next. The text already contains the answers, so nobody has to label anything by hand.<br><br>Every prediction is a probability. The less probability the model gave to what actually followed, the higher the loss. From that loss we work out how to adjust the parameters, make a small update, and move on to the next batch. Repeat that across trillions of tokens: that is pretraining.',
+    note: '',
     visual: 'step',
-    tag: 'illustrative',
+    tag: null,
   },
   {
     place: 4,
     label: 'Babysitting the run',
     kicker: 'JUPITER · JSC / Day-to-day',
     title: 'Babysitting<br>billions of parameters.',
-    text: 'The GPUs do the calculations. We keep an eye on the run: is it still running, is it learning, and does something need attention? Babysitting means knowing when to leave it alone, and when to step in.',
+    text: 'You cannot press “start pretraining” and simply hope it will be finished {{trainDays}} days later. We check, both manually and automatically, that the model is actually training and learning well.<br><br>We call this babysitting. Alongside the automatic monitoring tools, we have a babysitting schedule so there is also a person responsible for keeping an eye on the run. Here is what that involves.',
     note: '',
     visual: 'monitor',
+    tag: null,
+  },
+  {
+    place: 4,
+    label: 'A day in the life',
+    kicker: 'Behind the scenes / The human part',
+    title: 'A day in the life<br>of an LLM babysitter.',
+    text: 'Back at my desk in Amsterdam, the morning starts with a question: is the run still alive? Training carries on overnight, so I check how its night went before anything else.<br><br>Then: “Hi Claude.” I start a session, open the logs, and debug if something needs attention. If everything looks healthy, the run carries on while I work on data processing and experiments.',
+    note: '',
+    visual: 'day',
     tag: null,
   },
   {
@@ -142,18 +152,18 @@ JOURNEY.chapters = [
     label: 'When loss turns upward',
     kicker: 'JUPITER · JSC / Earlier run: 32B v1',
     title: 'When training<br>goes off track.',
-    text: 'The model predicts the next token. Falling loss means it assigns more probability to the tokens that actually follow: its predictions on the training text are improving. In this earlier run, that trend reversed.',
-    note: 'A single spike can be noise; a sustained rise deserves investigation. These are possible checks, not a diagnosis or a record of the team’s response.',
+    text: 'Here is a real reason to keep watching. In an earlier 32B run, loss had been falling: the model was assigning more probability to the tokens that actually came next. Its predictions on the training text were improving.<br><br>Then the trend reversed. One noisy batch means little; a rise that lasts thousands of steps means something is wrong. The graph shows when it happened. Finding the cause means checking what changed, reading the training diagnostics, and deciding whether to intervene.',
+    note: '',
     visual: 'incident',
-    tag: 'measured',
+    tag: null,
   },
   {
     place: 4,
     label: 'Annealing',
     kicker: 'JUPITER · JSC / Next phase',
     title: 'Slowing down<br>on purpose.',
-    text: 'In the final pretraining phase, we lower the learning rate for smaller updates and focus the data mix on high-quality material.',
-    note: 'Longer-context training can accompany this phase, but is a separate change. The exact recipe is not shown here. Annealing still trains next-token prediction; SFT comes afterwards.',
+    text: 'Towards the end of pretraining, we stay on JUPITER but change the pace. The model has learned from a broad mixture of text; now we want smaller, more careful adjustments.<br><br>We lower the learning rate so each batch changes the model more gently, and emphasize high-quality material in the data mix. This finishing phase is called annealing. Around the same time we may also train on longer passages, so the model can handle more text at once; that is a separate change.<br><br>The task is still next-token prediction. Turning the model into an assistant comes afterwards, with supervised fine-tuning.',
+    note: 'The shape of the learning-rate schedule, without real values.',
     visual: 'anneal',
     tag: 'schematic',
   },
@@ -162,8 +172,8 @@ JOURNEY.chapters = [
     label: 'Supervised fine-tuning',
     kicker: 'To come / SFT',
     title: 'From text to<br>helpful answers.',
-    text: 'Train on examples of prompts and good responses. The base model learns the format and behaviour of an assistant.',
-    note: 'Future chapter. Post-training hardware and schedule are not confirmed; the map stays at the last known stop.',
+    text: 'A pretrained model continues text. Ask it a question and it may well answer with more questions. We want an answer.<br><br>Supervised fine-tuning (SFT) trains the model on example prompts paired with good responses, so it learns to follow instructions and shape its replies. The model learns whatever those examples do, so choosing them is a large part of the work. This stage is still ahead of us.',
+    note: 'A made-up example. Where and when post-training runs is not decided yet, so the map stays at the last stop.',
     visual: 'sft',
     tag: 'illustrative',
   },
@@ -172,8 +182,8 @@ JOURNEY.chapters = [
     label: 'Reinforcement learning',
     kicker: 'To come / Post-training',
     title: 'Learning from<br>feedback.',
-    text: 'Reward better responses. Feedback can come from people or from outcomes we can verify, such as passing a code test.',
-    note: 'GRPO is an optimization algorithm; RLHF and RLVR describe feedback sources. The project’s method is not yet confirmed.',
+    text: 'After demonstrations, another way to improve the model is to give feedback on the responses it produces. Which answer is more useful? Does the generated code actually pass its tests?<br><br>Reinforcement learning uses rewards to encourage better responses. Human feedback gives us RLHF; outcomes we can check give us RLVR, or reinforcement learning with verifiable rewards. GRPO, which you may have heard of, is an algorithm that turns such rewards into model updates.<br><br>The hard part is choosing the reward: a model can learn to score well on it without becoming more useful.',
+    note: 'Our post-training method is not decided yet.',
     visual: 'rl',
     tag: 'schematic',
   },
@@ -256,8 +266,8 @@ JOURNEY.parts = {
   plot: (anneal = false) => `
     <svg class="plot" viewBox="0 0 380 140" role="img" aria-label="${anneal ? 'Illustrative learning rate schedule' : 'Illustrative experimental loss curves'}">
       <path class="axis" d="M25 10V110H365"/>
-      <text x="25" y="132">${anneal ? 'Pretraining' : 'Training tokens'}</text>
-      <text x="365" y="132" text-anchor="end">${anneal ? 'Annealing' : 'More compute'}</text>
+      <text x="25" y="132">${anneal ? 'Pretraining' : 'Less training'}</text>
+      <text x="365" y="132" text-anchor="end">${anneal ? 'Annealing' : 'More training'}</text>
       ${anneal ? `
         <path stroke="#18775c" d="M25 25H230 Q265 25 280 51L355 105"/>
         <path stroke="#c25a35" stroke-dasharray="3 4" d="M230 12V113"/>` : `
@@ -280,7 +290,14 @@ JOURNEY.parts = {
    Return an HTML string. Read numbers off `d` — see rule 1 at the top. */
 JOURNEY.figures = {
 
-  intro: ({ d, tbd }) => `
+  welcome: () => `
+    <div class="welcome-copy">
+      <p>I work on pretraining large language models from scratch at SURF, as part of OpenEuroLLM. This journey shows what that work looks like, on European supercomputers and for European languages.</p>
+      <p>We start at my office in Amsterdam, at SURF, the organisation behind the Dutch national supercomputer Snellius. From here, I work across several of Europe’s supercomputers.</p>
+    </div>`,
+
+  intro: ({ d, tbd, partners, groups }) => `
+    <p class="project-aims">OpenEuroLLM aims: truly open · EU-compliant · linguistically diverse.</p>
     <div class="family-label">THE OPENEUROLLM MODEL FAMILY</div>
     <div class="model-family">
       <div><strong>${d.m9.name}</strong><span>Smallest</span><small>Awaiting annealing</small></div>
@@ -289,7 +306,9 @@ JOURNEY.figures = {
       <i data-lucide="arrow-right"></i>
       <div><strong>${d.family.nextModelYear ?? tbd('roadmap year')}</strong><span>Larger model</span><small>Planned</small></div>
     </div>
-    <a class="project-link" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">openeurollm.eu <i data-lucide="arrow-up-right"></i></a>`,
+    <section class="project-collaboration"><h2>Working across Europe</h2><p>OpenEuroLLM brings together research groups, companies and supercomputing centres from across Europe. Each stop on the map is a place where part of the work happens.</p></section>
+    <details class="chapter-story project-partners"><summary>Meet the partners</summary><div class="project-partner-list">${JOURNEY.figures.partners({partners,groups})}</div></details>
+    `,
 
   partners: ({ partners, groups }) => `
     ${groups.map(([group, label]) => `
@@ -303,62 +322,74 @@ JOURNEY.figures = {
     <a class="project-link" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">Meet the consortium <i data-lucide="arrow-up-right"></i></a>
     <div class="funding-credit"><img src="assets/images/EU-cofounded.webp" alt="Co-funded by the European Union"></div>`,
 
-  /* The six documents are decoration. The tokens are real output of the
-     production SentencePiece tokenizer for "De Afsluitdijk ...". */
+  /* A conceptual pipeline, not a claim about HPLT's exact processing order. */
   data: () => `
-    <div class="data-docs">${'<div class="doc"><i></i><i></i><i></i></div>'.repeat(6)}</div>
-    <div class="data-stages"><span>Curate</span><span>Clean &amp; deduplicate</span><span>Mix sources</span></div>
-    <button class="small-action" id="clean" aria-pressed="false"><i data-lucide="filter"></i><span>Deduplicate sample</span></button>
-    <a class="project-link" href="https://hplt-project.org/" target="_blank" rel="noopener noreferrer"><img src="assets/images/HPLT-logo.svg" alt="HPLT" width="90" height="40" style="object-fit:contain"> HPLT 3/4 <i data-lucide="arrow-up-right"></i></a>`,
+    <div class="curation-source"><i data-lucide="files"></i><span><strong class="curation-scale">7.2 petabytes</strong>Raw web crawls · 2012–2024<br><small><a href="https://archive.org/" target="_blank" rel="noopener noreferrer">Internet Archive</a> + <a href="https://commoncrawl.org/" target="_blank" rel="noopener noreferrer">Common Crawl</a></small></span><a href="https://hplt-project.org/" target="_blank" rel="noopener noreferrer"><img src="assets/images/HPLT-logo.svg" alt="HPLT project" width="90" height="40"></a></div>
+    <div class="curation-arrow" aria-hidden="true"><i data-lucide="arrow-down"></i></div>
+    <p class="curation-intro">Before text reaches the model, it goes through extensive curation.</p>
+    <div class="curation-stages">
+      ${[
+        ['languages','Language identification','Which language is this?','Identify the language of documents and passages so we can select and balance the training material.'],
+        ['text-cursor-input','Normalization','Make the text consistent.','Standardize text encoding and formatting so accidental differences do not get in the way of processing.'],
+        ['copy-minus','Deduplication','Avoid learning the same text repeatedly.','Find exact and near-duplicate content so repeated pages do not dominate the training mix.'],
+        ['shield-check','PII removal','Filter identifying information.','Detect and remove or mask personal information, such as email addresses and phone numbers. Automated detection is imperfect.'],
+        ['file-check','robots.txt filtering','Check website crawling restrictions.','Filter according to the applicable robots.txt rules. These express crawler access preferences; they are not a copyright licence.'],
+        ['list-filter','Decontamination','Keep test material out of training.','Check for overlap with evaluation datasets, so memorized test answers do not inflate the results.']
+      ].map(([icon,title,short,detail])=>`<details class="curation-stage"><summary><i data-lucide="${icon}" aria-hidden="true"></i><span><strong>${title}</strong><small>${short}</small></span></summary><p>${detail}</p></details>`).join('')}
+    </div>
+    <div class="curation-arrow" aria-hidden="true"><i data-lucide="arrow-down"></i></div>
+    <div class="curation-output"><i data-lucide="database"></i><span><strong class="curation-scale">13.5 trillion tokens</strong>HPLT 3.0 · non-English portion<br><small>Published count using the Gemma 3 tokenizer</small></span></div>
+    <p class="curation-intro">These figures are for HPLT 3.0 alone; our training set combines it with other collections. Next, the selected text is tokenized.</p>
+    <a class="project-link" href="https://hplt-project.org/datasets/v3.0" target="_blank" rel="noopener noreferrer">HPLT 3.0 dataset statistics <i data-lucide="arrow-up-right"></i></a>`,
 
   tokenization: ({ d, num, tokens }) => `
     <div class="intro-meta"><div><strong>${num(d.tokenizer.vocab)}</strong>tokens in the vocabulary</div></div>
     <p class="visual-caption">${d.tokenizer.examples[0].text}</p>
     ${tokens(d.tokenizer.examples[0].pieces)}
     <a class="project-link" href="https://huggingface.co/openeurollm/tokenizer-256k" target="_blank" rel="noopener noreferrer">OpenEuroLLM tokenizer · 262k <i data-lucide="arrow-up-right"></i></a>
-    <a class="project-link" href="https://www.ellamind.com/blog/tokenization-tax-report-2026" target="_blank" rel="noopener noreferrer">Max’s Tokenization Tax report · ellamind <i data-lucide="arrow-up-right"></i></a>`,
+    <a class="project-link" href="https://www.ellamind.com/blog/tokenization-tax-report-2026" target="_blank" rel="noopener noreferrer">Tokenization Tax 2026 · ellamind <i data-lucide="arrow-up-right"></i></a>`,
 
-  /* Global batch is derived, so it cannot drift from the run's own numbers. */
-  scaling: ({ d, num, plot, tbd }) => {
-    const batch = d.m32.tokensPerStep && d.m32.arch?.seqLen
-      ? num(d.m32.tokensPerStep / d.m32.arch.seqLen) : tbd('global batch');
-    /* An approximate count from the team, so it wears the tilde rather than
-       pretending to the precision of a measured figure. */
-    const runs = d.experiments.smallRuns == null ? tbd('small-run count')
-      : (d.experiments.verified ? '' : '~') + num(d.experiments.smallRuns);
+  scaling: ({ plot }) => {
     return `
-    ${plot()}
-    <div class="legend"><span>Recipe A</span><span>Recipe B</span></div>
-    <div class="intro-rule"></div>
     <div class="intro-meta">
-      <div><strong>${runs}</strong>small runs before the ${d.m32.name} recipe was fixed</div>
-      <div><strong>${batch}</strong>${d.m32.name} global batch / sequences</div>
-      <div><strong>${d.m32.lr == null ? tbd('learning rate') : d.m32.lr.toExponential(2)}</strong>${d.m32.name} learning rate</div>
-    </div>`;
+      <div><strong>Batch size</strong>Text per update</div>
+      <div><strong>Learning rate</strong>Size of each update</div>
+      <div><strong>Data mix</strong>What it learns from</div>
+    </div>
+    <figure class="scaling-evidence">
+      ${plot()}
+      <div class="legend"><span>Recipe A</span><span>Recipe B</span></div>
+      <figcaption>Lower is better: recipe A predicts better for the same amount of training.</figcaption>
+    </figure>
+    <a class="scaling-paper" href="https://arxiv.org/abs/2608.28308" target="_blank" rel="noopener noreferrer"><span>Deriving Scaling Laws for OpenEuroLLM Models: Learning Rate, Batch Size and Loss</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+    `;
   },
 
   nine: ({ d, num, tbd }) => `
     <div class="prelude-stats">
       <div><strong>${d.m9.name}</strong><span>parameters</span></div>
       <div><strong>${d.m9.gpus == null ? tbd('9B GPU count') : num(d.m9.gpus)}</strong><span>${d.m9.gpuType ?? 'GPUs'}</span></div>
+      <div><strong>${d.m9.totalTokens == null ? tbd('Prelude training tokens') : (d.m9.totalTokens / 1e12) + 'T'}</strong><span>training tokens</span></div>
+      <div><strong>1+ month</strong><span>of training</span></div>
     </div>
     <a class="project-link" href="${d.m9.weightsUrl}" target="_blank" rel="noopener noreferrer">Prelude on Hugging Face <i data-lucide="arrow-up-right"></i></a>`,
 
   MultiSynt: () => `
     <div class="synth-flow">
       <i data-lucide="languages" aria-hidden="true"></i>
-      <strong>Multilingual synthesis</strong>
+      <strong>Machine translation into 36 languages</strong>
       <i data-lucide="arrow-down" aria-hidden="true"></i>
       <div class="synth-documents" aria-label="Illustrative multilingual documents">
-        ${['EN', 'NL', 'FI', 'IT', 'ES', '…'].map(lang => `<div class="synth-document"><span>${lang}</span><i></i><i></i><i></i></div>`).join('')}
+        ${['SQ', 'NL', 'FI', 'IT', 'ES', '…'].map(lang => `<div class="synth-document"><span>${lang}</span><i></i><i></i><i></i></div>`).join('')}
       </div>
-      <span class="visual-caption">Synthetic text for pretraining</span>
-    </div>`,
+    </div>
+    <a class="scaling-paper" href="https://arxiv.org/abs/2607.00890" target="_blank" rel="noopener noreferrer"><span>MultiSynt/MT: Trillion-Token Multi-Parallel Pre-Training Data Translated Across 36 Languages</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>`,
 
   /* The node grid is drawn from d.m32.nodes, so the picture and the stat
      above it can never disagree. */
   run: ({ d, num, stamp, tbd }) => {
     const m = d.m32;
+    const rate = Number.isFinite(m.tokensPerStep) && m.secPerStep > 0 ? m.tokensPerStep / m.secPerStep : null;
     /* Attributes need plain text, so these stay separate from num(). */
     const nodes = Number.isFinite(m.nodes) ? m.nodes : 0;
     const perNode = m.gpusPerNode ?? '?';
@@ -370,107 +401,146 @@ JOURNEY.figures = {
     <div class="run-stats">
       <div><strong>${num(m.gpus)}</strong>${m.gpuType ? m.gpuType.split(' ').pop() : ''} GPUs</div>
       <div><strong>${num(m.nodes)}</strong>nodes</div>
-      <div><strong>${num(m.step)}</strong>steps</div>
+      <div><strong>${rate == null ? '—' : (rate / 1e6).toFixed(1) + 'M'}</strong>tokens / second</div>
     </div>
     <div class="gpu-grid" aria-label="${nodes} nodes, ${perNode} GPUs per node">${'<i></i>'.repeat(nodes)}</div>
-    <div class="visual-caption">One square = one node · ${perNode} GPUs</div>
+    <div class="visual-caption">One square = one node of ${perNode} ${m.gpuType ? m.gpuType.split(' ').pop() : ''} GPUs</div>
     <div class="progress-label">
-      <strong>${known ? percent.toFixed(1) + '% of planned steps' : tbd('32B progress')}</strong>
+      <strong>${known ? percent.toFixed(1) + '% of planned training' : tbd('32B progress')}</strong>
       <span>${seen}</span>
     </div>
     <progress value="${percent}" max="100" aria-label="${m.name} training progress"></progress>
-    <p class="ticker">Tokens seen while this page has been open: <strong id="token-ticker">0</strong>
-      <small>if it is still running at the ${Number.isFinite(m.secPerStep) ? (m.tokensPerStep / m.secPerStep / 1e6).toFixed(1) : '—'}M tokens per second measured above</small></p>
+    <p class="visual-caption">${rate == null ? '' : `About ${(rate / 2 / 1e6).toFixed(1)} million words per second, at roughly 2 tokens per word (this varies by language).`}</p>
+    <p class="ticker">At this pace, tokens processed since opening this page: <strong id="token-ticker">0</strong>
+      <small>Illustrative counter, assuming uninterrupted training at the recorded speed.</small></p>
     <div class="visual-caption">${stamp()}</div>`;
   },
 
-  /* The four phase buttons drive this figure: the engine puts the current
-     phase on .visual[data-active] and marks [data-phase] elements .current,
-     so each phase changes what is emphasised and what the caption says.
-     The example sentence and the wrong guess are invented, as the note says. */
-  step: ({ d, tokens }) => `
+  /* The four phase buttons drive this figure: the engine sets .visual[data-active]
+     and marks [data-phase] elements .current. Tokens are the real output of
+     openeurollm/tokenizer-256k (checked by dev/tokenize-examples.py); guesses
+     and probabilities are invented. The measured lines read data.js. */
+  step: ({ d, num, tbd }) => {
+    const example = [
+      { input: 'Het',   guess: '▁is',        actual: '▁weer',      p: 0.03 },
+      { input: '▁weer', guess: '▁in',        actual: '▁in',        p: 0.62 },
+      { input: '▁in',   guess: '▁Duitsland', actual: '▁Nederland', p: 0.21 },
+    ];
+    const loss = p => -Math.log(p);
+    const mean = example.reduce((sum, e) => sum + loss(e.p), 0) / example.length;
+    const cells = (row, fn) => example.map(e => `<div class="step-cell" data-row="${row}">${fn(e)}</div>`).join('');
+    const label = (row, text) => `<span class="step-tag" data-row="${row}">${text}</span>`;
+    const m = d.m32;
+    const perStep = Number.isFinite(m.tokensPerStep) ? `${(m.tokensPerStep / 1e6).toFixed(1)} million` : tbd('tokens per step');
+    const pct = e => Math.round(e.p * 100);
+    return `
     <div class="step-figure">
-      <div class="step-line"><span class="step-tag">CONTEXT</span>${tokens(['Het', '▁weer', '▁in'])}</div>
-      <div class="step-flow" aria-hidden="true"><span>↓</span><span>↓</span><span>↓</span></div>
-      <div class="model-block">OpenEuroLLM · ${d.m32.name} parameters</div>
-      <div class="step-line"><span class="step-tag">TOP GUESS</span>
-        <div class="tokens"><span class="token is-right">▁weer</span><span class="token is-right">▁in</span><span class="token is-wrong">▁Duitsland</span></div>
+      <div class="step-grid">
+        ${label('input', 'Input')}${cells('input', e => `<span class="token">${e.input}</span>`)}
+        <span></span>${cells('flow', () => '<span class="step-arrow">↓</span>')}
+        <span></span><div class="model-block" data-row="model">OpenEuroLLM ${m.name}</div>
+        ${label('next', 'Actual next')}${cells('next', e => `<span class="token">${e.actual}</span><span class="step-prob"><i style="width:${pct(e)}%"></i></span><small>${pct(e)}% chance<br>${e.guess === e.actual ? '<em class="is-right">top guess</em>' : `guessed <em class="is-wrong">${e.guess}</em>`}</small>`)}
+        ${label('loss', 'Loss')}${cells('loss', e => `<strong>${loss(e.p).toFixed(2)}</strong>`)}
       </div>
-      <div class="step-line step-target"><span class="step-tag">ACTUALLY NEXT</span>${tokens(['▁weer', '▁in', '▁Nederland'])}</div>
 
-      <p class="step-explain" data-phase="0">Each position assigns probabilities to possible next tokens. It sees its own input token and earlier ones, never future tokens. Only top guesses are shown.</p>
-      <p class="step-explain" data-phase="1">Loss measures the probability assigned to the actual next token. Lower probability means higher loss, even when the top guess matches.</p>
-      <p class="step-explain" data-phase="2">Backpropagation computes gradients: how a small change to each parameter would affect the loss. These guide the update.</p>
-      <p class="step-explain" data-phase="3">The optimizer uses the batch gradients and learning rate to update the parameters. Then comes another batch; improvement is not guaranteed on every step.</p>
+      <p class="step-explain" data-phase="0">Each input predicts the token after it, using only the tokens up to that point. The bar is the probability the model gave to what actually came next.</p>
+      <p class="step-explain" data-phase="1">Less probability for the actual next token means a larger penalty, called loss. Even the best guess can be uncertain. The average penalty in this example is ${mean.toFixed(2)}.</p>
+      <p class="step-explain" data-phase="2">Backpropagation calculates gradients: how a small change to each parameter would affect the loss. These guide the next update.</p>
+      <p class="step-explain" data-phase="3">The optimizer uses those gradients to adjust the model. Then comes another batch: ${perStep} tokens per update in this run.</p>
 
       <div class="loop-bottom" role="group" aria-label="Training step phases">
         <button type="button" data-phase="0" class="current">Predict</button>
         <button type="button" data-phase="1">Loss</button>
         <button type="button" data-phase="2">Gradients</button>
         <button type="button" data-phase="3">Update ↺</button>
+        <button class="small-action" id="step-toggle" aria-label="Pause training illustration" title="Pause training illustration" aria-pressed="false"><i data-lucide="pause"></i></button>
       </div>
-      <button class="small-action" id="step-toggle" aria-label="Pause training illustration" title="Pause training illustration" aria-pressed="false"><i data-lucide="pause"></i></button>
-    </div>`,
+    </div>`;
+  },
 
   /* Counts remain explicitly unavailable until the monitoring feed is wired. */
   monitor: ({ d, num }) => {
     const count = value => value == null
       ? '<span class="watch-unavailable">Not connected yet</span>' : num(value);
-    /* Why a rota exists at all: many GPUs turn a rare failure into a daily
-       one. Derived from cluster.mtbfYearsDefault, which is schematic, so the
-       sentence states its assumption out loud. */
-    const hours = d.cluster.mtbfYearsDefault && d.m32.gpus
-      ? d.cluster.mtbfYearsDefault * 365 * 24 / d.m32.gpus : null;
-    const odds = hours == null ? null
-      : hours < 48 ? Math.round(hours) + ' hours' : Math.round(hours / 24) + ' days';
     return `
+    <ul class="babysitter-tasks">
+      <li><strong>Is it running?</strong> Do we have ${num(d.m32.nodes)} nodes allocated, are we waiting in a shared queue, and is the supercomputer healthy?</li>
+      <li><strong>Is it learning?</strong> Follow the loss over time. A downward trend generally means better predictions on the training data.</li>
+      <li><strong>Does it work on real tasks?</strong> Run intermediate evaluations. Loss is useful, but benchmarks help reveal which capabilities are improving.</li>
+      <li><strong>Can we recover?</strong> Check that saved training states, or checkpoints, are complete and readable. A failed save or corrupted file can cost progress; fortunately, we have not lost the run this way.</li>
+      <li><strong>Is the next restart ready?</strong> Check the job time limit, saved state and next submission so a scheduled stop does not become a long interruption.</li>
+    </ul>
+    <p class="babysitter-context">Prelude, our 9B run on Leonardo, is a good example. A node is one computer in the cluster. Because they work together, a single failing GPU or network connection can stop the whole training job. Allocations also have a time limit, called walltime, typically 12–24 hours for these jobs, so not every restart is a failure.</p>
     <div class="babysit-flow">
       <div><i data-lucide="bell"></i><strong>Notice</strong><span>Something changed</span></div>
       <div><i data-lucide="search"></i><strong>Investigate</strong><span>Noise or a problem?</span></div>
       <div><i data-lucide="git-branch"></i><strong>Decide</strong><span>Wait or intervene?</span></div>
     </div>
     <div class="watch-stats">
-      <div><strong>${count(d.cluster.restartsTotal)}</strong><small>Restarts</small></div>
-      <div><strong>${count(d.cluster.failuresTotal)}</strong><small>Node failures</small></div>
+      <div><strong>${count(d.m9.restartsTotal)}</strong><small>Prelude restarts</small></div>
+      <div><strong>~${count(d.m9.failuresTotal)}</strong><small>Unplanned restarts from node failures</small></div>
     </div>
-    ${odds ? `<p class="at-risk">Even if a single GPU only fails once in ${d.cluster.mtbfYearsDefault} years, ${num(d.m32.gpus)} of them together means one about <strong>every ${odds}</strong>. Nothing takes over when it does.</p>` : ''}
-    <div class="causes" aria-label="What typically goes wrong on a cluster this size, not this run's own record">
-      <p class="causes-note">What typically breaks · not this run's own record</p>
-      ${d.cluster.causes.map(cause => `<div class="cause"><i style="width:${(cause.share * 100).toFixed(0)}%"></i><span>${JOURNEY.failureCauses[cause.id] ?? cause.id}</span><b>${Math.round(cause.share * 100)}%</b></div>`).join('')}
-    </div>`;
+    <p class="babysitter-context">These counts are from Prelude, not the current 32B run. One GPU out of 1,024, or a faulty network link, can force a full-job restart. We identify and exclude the failing node where possible, then resume from a saved checkpoint.</p>`;
   },
 
   incident: ({ d, tbd }) => {
-    const incident = d.incidents.lossSpike;
+    const incident = d.incidents.lossSpike, p = incident.plot;
+    /* The recorded pixels, with axes and one marker drawn over them from the
+       screenshot's own calibration. Nothing here re-plots the curve. */
+    const plotSvg = () => {
+      const X = k => p.x.at + (k - p.x.value) * p.x.perUnit;
+      const Y = v => p.y.at + (v - p.y.value) * p.y.perUnit;
+      const yTicks = [1.52, 1.56, 1.60, 1.64, 1.68].map(v =>
+        `<text x="-12" y="${Y(v) + 5}" text-anchor="end">${v.toFixed(2)}</text>`).join('');
+      const xTicks = [30, 40, 50, 60, 70].map(k =>
+        `<line x1="${X(k)}" x2="${X(k)}" y1="${p.height}" y2="${p.height + 6}"/><text x="${X(k)}" y="${p.height + 26}" text-anchor="middle">${k}k</text>`).join('');
+      const turn = p.turnStep == null ? '' : `<g class="loss-turn" data-at="${(X(p.turnStep) / p.width).toFixed(3)}">
+          <line x1="${X(p.turnStep)}" x2="${X(p.turnStep)}" y1="0" y2="${p.height}"/>
+          <text x="${X(p.turnStep) - 8}" y="18" text-anchor="end">Loss turns upward</text></g>`;
+      return `<svg viewBox="-78 -34 ${p.width + 92} ${p.height + 104}" role="img" aria-label="${incident.alt ?? ''}">
+        <defs><clipPath id="loss-clip"><rect x="0" y="-30" width="${p.width}" height="${p.height + 30}"/></clipPath></defs>
+        <text class="axis-title" x="-78" y="-14">Loss · lower is better</text>
+        <g class="ticks">${yTicks}${xTicks}</g>
+        <line class="axis" x1="0" x2="${p.width}" y1="${p.height}" y2="${p.height}"/>
+        <g clip-path="url(#loss-clip)"><image href="${p.image}" width="${p.width}" height="${p.height}"/></g>${turn}
+        <text class="axis-title" x="${p.width}" y="${p.height + 64}" text-anchor="end">Training step</text>
+      </svg>`;
+    };
     return `${incident.image
       ? `<figure class="incident">
-          <a class="loss-replay" href="${incident.image}" target="_blank" rel="noopener noreferrer" aria-label="Open the complete original loss plots in a new tab"><img src="${incident.image}" alt="${incident.alt ?? ''}"></a>
-          <figcaption>Recorded 32B v1 run · language-model loss · not live</figcaption>
+          <a class="loss-replay" href="${incident.image}" target="_blank" rel="noopener noreferrer" aria-label="Open the complete original loss plots in a new tab">${p?.image ? plotSvg() : `<img src="${incident.image}" alt="${incident.alt ?? ''}">`}</a>
+          <figcaption>Recorded 32B v1 run · language-model loss · not live. Each colour is a separate job, resumed from the last saved checkpoint.</figcaption>
         </figure>
         <div class="replay-controls"><button id="loss-play" title="Play recorded plot reveal" aria-label="Play recorded plot reveal"><i data-lucide="play"></i></button><p id="loss-status" role="status">A falling trend, then a reversal.</p></div>
         <fieldset class="incident-checks"><legend>What would you check?</legend>
           <button type="button" data-check="data" aria-pressed="false">Data</button>
           <button type="button" data-check="gradients" aria-pressed="false">Gradients</button>
+          <button type="button" data-check="software" aria-pressed="false">Software bug</button>
+          <button type="button" data-check="hardware" aria-pressed="false">Hardware malfunction</button>
           <button type="button" data-check="changes" aria-pressed="false">Recent changes</button>
         </fieldset>
-        <p id="incident-answer">Babysitting means checking the evidence before deciding whether to continue, change something or restart.</p>`
+        <p id="incident-answer" hidden aria-live="polite"></p>
+        <details class="incident-finding"><summary>What did we suspect in this run?</summary><p>Our working explanation was a combination of a software bug and insufficient normalization. We consider these likely contributors, not a conclusively established diagnosis.</p></details>`
       : `<div class="incident incident--empty"><span class="incident-label">From the run: a loss spike</span>${tbd('loss-spike screenshot')}</div>`}
     `;
   },
 
-  /* The decay fraction is the real one from data.js (wsd.decayFrac); the
-     steps and days that follow are arithmetic on it at the current pace. */
-  anneal: ({ d, num, plot, tbd }) => {
-    const decay = d.wsd.decayFrac, steps = decay && d.m32.totalSteps ? decay * d.m32.totalSteps : null;
-    const days = steps && d.m32.secPerStep ? (steps * d.m32.secPerStep / 86400).toFixed(0) : null;
+  day: () => `
+    <div class="day-routine">
+      <div><i data-lucide="sunrise"></i><div><strong>Wake up.</strong><p>First question: is the run still alive?</p></div></div>
+      <div><i data-lucide="activity"></i><div><strong>Check how the night went.</strong><p>Still training? Loss looking okay?</p></div></div>
+      <div><i data-lucide="message-circle"></i><div><strong>“Hi Claude.”</strong><p>Start a session. Time to get to work.</p></div></div>
+      <div><i data-lucide="wrench"></i><div><strong>Debug, if necessary.</strong><p>Something broke? Open the logs. Otherwise, let it train.</p></div></div>
+    </div>`,
+
+  anneal: ({ plot }) => {
     return `
     ${plot(true)}
     <div class="intro-meta">
-      <div><strong>${decay ? Math.round(decay * 100) + '%' : tbd('decay fraction')}</strong>of the schedule is the decay phase</div>
-      <div><strong>${steps ? num(Math.round(steps)) : tbd('decay steps')}</strong>steps${days ? `, about ${days} compute days at the recorded pace` : ''}</div>
+      <div><strong>Smaller adjustments</strong>The learning rate falls</div>
+      <div><strong>Focused practice</strong>More high-quality text</div>
     </div>
-    <div class="intro-rule"></div>
-    <span class="pill" style="align-self:center">Base model → post-training</span>`;
+`;
   },
 
   sft: () => `

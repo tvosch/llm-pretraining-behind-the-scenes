@@ -29,6 +29,16 @@ const SNAP = {
   incidents: {
     lossSpike: {
       image: "assets/images/32b-v1-loss-increase.png",
+      /* The lm-loss panel of that screenshot, cropped to the plot area and
+         recoloured for the dark page by dev/loss-plot-dark.py. Axis values are
+         read off the screenshot's own tick marks, in steps (thousands) and loss. */
+      plot: {
+        image: "assets/images/32b-v1-loss-dark.png",
+        width: 874, height: 322,
+        x: { at: 17.5, value: 25, perUnit: 16.97 },     // px of step 25k, px per 1k steps
+        y: { at: 11.5, value: 1.68, perUnit: -1750 },   // px of loss 1.68, px per 1.0 loss
+        turnStep: 67,   // thousands; where the sustained rise begins, read by eye
+      },
       alt: "Earlier 32B v1 run: language-model loss decreases before turning upward around step 67,000. A second panel shows output z-loss.",
       caption: "Earlier run: 32B v1. Loss starts rising instead of falling, a warning sign of divergence. The curves alone do not identify the cause; this is not the current run.",
     },
@@ -90,6 +100,8 @@ const SNAP = {
     params: 9e9,
     cluster: "Leonardo",
     clusterWhere: "Bologna, Italië",
+    failuresTotal: 16,       // Prelude history supplied by the team
+    restartsTotal: 70,
     state: "pending_annealing",
     step: null,               // TODO: tracker glob points at the wrong run dir
     totalSteps: null,

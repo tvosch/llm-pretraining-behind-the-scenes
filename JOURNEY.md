@@ -59,8 +59,8 @@ Machine/operator pairs: Snellius/SURF, LUMI/CSC, MareNostrum 5/BSC,
 Leonardo/Cineca and JUPITER/JSC. Map pins retain city names.
 
 The 12-chapter journey includes Prelude (9B, 1,024 NVIDIA A100 GPUs) with its
-Hugging Face link, plus a separate MultiSynth chapter at Bologna describing
-multilingual synthetic pretraining data. Further MultiSynth details are pending.
+Hugging Face link, plus a separate MultiSynt chapter at Bologna describing
+multilingual synthetic pretraining data. Further MultiSynt details are pending.
 The partners chapter groups smaller, evenly spaced marks on a dark background.
 The supplied `assets/images/EU-cofounded.webp` image provides the EU co-funding
 lockup, including the flag and text. The introduction briefly states the project's

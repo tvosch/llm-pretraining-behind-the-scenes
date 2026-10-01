@@ -33,7 +33,7 @@
 
   const places = JOURNEY.places, chapters = JOURNEY.chapters, partners = JOURNEY.partners;
   const UI = JOURNEY.ui;
-  places.forEach((place,i)=>{place.chapter=chapters.findIndex(chapter=>chapter.place===i);});
+  places.forEach((place,i)=>{place.chapter=chapters.findIndex(chapter=>chapter.place===i&&chapter.visual!=='welcome');});
 
   const canvas = $('#europe'), ctx = canvas.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -50,6 +50,14 @@
     runStart: () => SNAP.m32.startedAt
       ? new Date(SNAP.m32.startedAt).toLocaleDateString('en-GB', {day:'numeric', month:'long'}) : '—',
     /* Derived on every view, so "days so far" cannot go stale in the copy. */
+    /* Pure compute time for the whole schedule at the measured step time. */
+    trainDays: () => SNAP.m32.totalSteps && SNAP.m32.secPerStep
+      ? Math.round(SNAP.m32.totalSteps * SNAP.m32.secPerStep / 86400) : '—',
+    gpus: () => SNAP.m32.gpus?.toLocaleString('en-GB') ?? '—',
+    /* Tensor x pipeline parallel GPUs hold one copy; data parallel is the copies. */
+    replicaGpus: () => SNAP.m32.parallel ? SNAP.m32.parallel.tp * SNAP.m32.parallel.pp : '—',
+    replicas: () => SNAP.m32.parallel?.dp ?? '—',
+    smallRuns: () => SNAP.experiments.smallRuns?.toLocaleString('en-GB') ?? '—',
     runDays: () => SNAP.m32.startedAt
       ? Math.max(0, Math.floor((Date.now() - Date.parse(SNAP.m32.startedAt)) / 86400000)) : "—",
   };
@@ -91,14 +99,19 @@
     clearInterval(stageTimer);
     clearInterval(tickerTimer);
     const c=chapters[index], p=places[c.place];
+    document.body.classList.toggle('welcome',c.visual==='welcome');
     $('#scene').dataset.chapter=c.visual;
     $('#scene').innerHTML=`<div class="scene-kicker"><span class="number">${String(index+1).padStart(2,'0')}</span>${fill(c.kicker)}</div><h1>${fill(c.title)}</h1><p class="lede">${fill(c.text)}</p><div class="visual">${visual(c.visual)}</div>${sceneNote(c)}`;
+    const storyHost=document.createElement('div');
+    storyHost.className='story-slot';
+    $('#scene').append(storyHost);
+    window.chapterStories.mount(c.visual,storyHost);
     const partnersChapter=c.visual==='partners';
     $('#place').textContent=partnersChapter?t(UI.acrossEurope):p.name;
     $('#machine').textContent=partnersChapter?t(UI.oneCollaboration):p.machine;
     $('#place-detail').textContent=partnersChapter?t(UI.collaborationSub):`${t(UI.operatedBy)} ${p.operator} · ${t(p.country)}`;
     const photo=$('#machine-photo');
-    const photos=['snellius.png','lumi.jpg','marenostrum5.png','leonardo.jpg','jupiter.jpeg'];
+    const photos=['snellius.webp','lumi.webp','marenostrum5.webp','leonardo.webp','jupiter.webp'];
     photo.hidden=partnersChapter||['sft','rl'].includes(c.visual);
     const photoUrl=`assets/images/${photos[c.place]}`;
     photo.querySelector('img').src=photoUrl;
@@ -109,14 +122,14 @@
     $('#position').textContent=`${String(index+1).padStart(2,'0')} / ${chapters.length}`;
     $('#chapter-name').textContent=t(c.label);
     $('#prev').disabled=index===0;
-    $('#next span').textContent=index===chapters.length-1?t(UI.backToStart):chapters[index+1].place!==c.place?t(UI.nextStop):t(UI.continue);
+    $('#next span').textContent=c.visual==='welcome'?'Start the journey':index===chapters.length-1?t(UI.backToStart):chapters[index+1].place!==c.place?t(UI.nextStop):t(UI.continue);
     $('#next').title=index===chapters.length-1?t(UI.backToStart):t(UI.nextChapter);
     $('#next').setAttribute('aria-label',$('#next').title);
     document.querySelectorAll('[data-chapter]').forEach(b=>{const active=+b.dataset.chapter===index;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
     document.querySelectorAll('.pin').forEach((b,i)=>b.classList.toggle('active',!partnersChapter&&i===c.place));
     if ($('#clean')) $('#clean').onclick=()=>{const active=$('.visual').classList.toggle('filtered');$('#clean').setAttribute('aria-pressed',String(active));$('#clean span').textContent=active?t(UI.resetSample):t(UI.deduplicate);};
     if ($('#step-toggle')) {
-      let phase=0, paused=reduced;
+      let phase=0, paused=true;
       const button=$('#step-toggle');
       const paintButton=()=>{button.innerHTML=`<i data-lucide="${paused?'play':'pause'}"></i>`;button.setAttribute('aria-pressed',String(paused));button.title=paused?t(UI.resumeFigure):t(UI.pauseFigure);button.setAttribute('aria-label',button.title);icons();};
       /* The phase drives the figure, not just the label: [data-phase] elements
@@ -131,16 +144,20 @@
         const figure=$('.visual'); if(figure)figure.dataset.active=phase;
       };
       document.querySelectorAll('.loop-bottom [data-phase]').forEach(b=>{b.onclick=()=>{phase=+b.dataset.phase;paused=true;paintPhase();paintButton();};});
-      stageTimer=setInterval(()=>{if(paused||document.hidden)return;phase=(phase+1)%4;paintPhase();},2600);
+      stageTimer=setInterval(()=>{if(paused||document.hidden)return;phase=(phase+1)%4;paintPhase();},2000);
       button.onclick=()=>{paused=!paused;paintButton();};paintButton();paintPhase();
     }
     if ($('#loss-play')) {
       const plot=$('.loss-replay'), button=$('#loss-play'), status=$('#loss-status');
       let progress=1, playing=false;
+      const clip=plot.querySelector('#loss-clip rect'), turn=plot.querySelector('.loss-turn');
+      const turnAt=turn ? +turn.dataset.at : .85, fullWidth=clip ? +clip.getAttribute('width') : 0;
       const paint=()=>{
-        plot.style.setProperty('--reveal', `${progress*100}%`);
-        status.textContent=progress<.85?'Loss is falling: predictions are improving.':'Loss is rising. Is that normal?';
-        status.classList.toggle('loss-alert',progress>=.85);
+        if(clip) clip.setAttribute('width', progress*fullWidth);
+        else plot.style.setProperty('--reveal', `${progress*100}%`);
+        turn?.classList.toggle('shown',progress>=turnAt);
+        status.textContent=progress<turnAt?'Loss is falling: predictions are improving.':'Loss is rising. Is that normal?';
+        status.classList.toggle('loss-alert',progress>=turnAt);
         button.innerHTML=`<i data-lucide="${playing?'pause':progress>=1?'rotate-ccw':'play'}"></i>`;
         button.title=playing?'Pause plot reveal':progress>=1?'Replay recorded plot':'Resume plot reveal';
         button.setAttribute('aria-label',button.title);icons();
@@ -158,13 +175,16 @@
       },100);
       if(!reduced){progress=0;playing=true;paint();}
       const answers={
-        data:'Did the batch mix or source change? Harder text can raise loss without implying a broken model. Compare batches and held-out evaluations.',
-        gradients:'Did gradient norms spike or become non-finite? Inspect them alongside loss and numerical diagnostics for signs of unstable updates.',
+        data:'Did the data mix change, or did damaged files, corrupted text or incorrect token IDs enter the pipeline? Inspect the actual batches and compare with known-good data. Harder text can also raise loss without a broken model.',
+        gradients:'Did gradient magnitudes spike or become non-finite? Check how signals are scaled through the model. Insufficient normalization can allow unstable values; gradient clipping limits large updates but is not the same as normalization.',
+        software:'Could a code change or an incorrect implementation affect attention masks, loss calculation or updates? Compare versions and reproduce a small case against a trusted implementation before blaming the hardware.',
+        hardware:'Do GPU, memory or network diagnostics show errors? Check whether trouble follows a particular node and test or exclude it. Hardware faults often stop a job, but a loss curve alone cannot prove or rule out a fault.',
         changes:'What changed near the reversal: learning rate, precision, code, or a resumed checkpoint? Align the logs before attributing a cause.'
       };
       document.querySelectorAll('[data-check]').forEach(b=>{b.onclick=()=>{
         document.querySelectorAll('[data-check]').forEach(other=>other.setAttribute('aria-pressed',String(other===b)));
         $('#incident-answer').textContent=answers[b.dataset.check];
+        $('#incident-answer').hidden=false;
       };});
     }
     /* Counts tokens against the measured rate for as long as the page is
@@ -189,6 +209,7 @@
   function menu(open) { $('#chapters').hidden=!open;$('#menu-toggle').setAttribute('aria-expanded',String(open));if(open)$('#chapter-list button.active').focus(); }
   function go(next) {
     if(next<0||next>=chapters.length)return;
+    window.scrollTo({top:0,behavior:'instant'});
     clearTimeout(flightTimer);cancelAnimationFrame(frame);flight=null;
     const from=chapters[index].place,to=chapters[next].place;
     index=next;history.replaceState(null,'',`#chapter-${index+1}`);menu(false);
@@ -203,14 +224,26 @@
       flightTimer=setTimeout(()=>{flight=null;render();document.body.classList.remove('travelling');$('#scene').inert=false;$('#travel').textContent='';},2050);
     }else{render();$('#scene').inert=false;$('#travel').textContent='';if(!reduced)$('#scene').animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:350,easing:'ease-out'});}
   }
-  function project(lon,lat){
-    const merc = value => Math.log(Math.tan(Math.PI/4+value*Math.PI/360));
+  const mapProjection=d3.geoConicConformal().parallels([40,65]).rotate([-15,0]).center([0,54]);
+  let projectionKey='';
+  let mapFrame=[0,0,0,0];
+  function fitMap(){
     const mobile=width<700, overview=document.body.classList.contains('overview')||!!flight;
-    const mapWidth=mobile?width*.88:overview?Math.min(width*.68,900):width*.46;
-    const scale=mapWidth/60, x=mobile?width*.10:overview?(width-mapWidth)/2:width*.035;
-    const y=mobile?190:height*.30;
-    return [x+(lon+13)*scale,y+(merc(69)-merc(lat))*180/Math.PI*scale*.70];
+    const key=`${width}:${height}:${overview}:${!!mapData}`;
+    if(key===projectionKey)return;
+    projectionKey=key;
+    /* Desktop: fill the map column, whatever width the CSS split gave it. */
+    const column=document.getElementById('scene').getBoundingClientRect().left;
+    const mapWidth=mobile?width*.88:overview?Math.min(width*.68,900):Math.max(width*.34,column-64);
+    const top=mobile?210:overview?125:Math.min(370,height*.40);
+    const bottom=Math.max(top+120,height-105);
+    const left=mobile||overview?(width-mapWidth)/2:32;
+    mapFrame=[left,top,mapWidth,bottom-top];
+    // Fit projected vertices with one uniform scale; never stretch either axis.
+    const coordinates=mapData?mapData.features.filter(f=>!f.properties.context).flatMap(f=>f.geometry.coordinates.flat(2)):[[-10,36],[35,35],[30,71],[-10,60]];
+    mapProjection.fitExtent([[left,top],[left+mapWidth,bottom]],{type:'MultiPoint',coordinates});
   }
+  function project(lon,lat){return mapProjection([lon,lat]);}
   function route(a,b,t=1){
     const p=project(places[a].lon,places[a].lat),q=project(places[b].lon,places[b].lat);
     const mid=[(p[0]+q[0])/2-40,(p[1]+q[1])/2-35];
@@ -219,9 +252,20 @@
   }
   function draw(){
     if(!width)return;ctx.clearRect(0,0,width,height);ctx.fillStyle='#02090f';ctx.fillRect(0,0,width,height);
+    fitMap();
     if(mapData){
       ctx.lineWidth=.7;ctx.strokeStyle='#25404f';ctx.fillStyle='#0b1b25';
-      mapData.features.forEach(feature=>{const geometry=feature.geometry;if(!geometry)return;const polygons=geometry.type==='Polygon'?[geometry.coordinates]:geometry.type==='MultiPolygon'?geometry.coordinates:[];polygons.forEach(polygon=>{ctx.beginPath();polygon.forEach(ring=>{ring.forEach((coord,i)=>{const p=project(coord[0],coord[1]);if(i===0)ctx.moveTo(...p);else ctx.lineTo(...p);});ctx.closePath();});ctx.fill('evenodd');ctx.stroke();});});
+      mapData.features.forEach(feature=>{
+        const geometry=feature.geometry;if(!geometry)return;
+        ctx.save();
+        if(feature.properties.context){
+          const [x,y,w,h]=mapFrame;
+          ctx.beginPath();ctx.rect(x,y,Math.min(w+60,width-x-12),h);ctx.clip();
+        }
+        const polygons=geometry.type==='Polygon'?[geometry.coordinates]:geometry.type==='MultiPolygon'?geometry.coordinates:[];
+        polygons.forEach(polygon=>{ctx.beginPath();polygon.forEach(ring=>{ring.forEach((coord,i)=>{const p=project(coord[0],coord[1]);if(i===0)ctx.moveTo(...p);else ctx.lineTo(...p);});ctx.closePath();});ctx.fill('evenodd');ctx.stroke();});
+        ctx.restore();
+      });
     }
     ctx.setLineDash([3,6]);ctx.strokeStyle='#52768b';ctx.lineWidth=1;
     for(let i=0;i<places.length-1;i++)route(i,i+1);ctx.setLineDash([]);
@@ -243,7 +287,7 @@
   window.addEventListener('resize',resize);
   const requested=Number(location.hash.replace('#chapter-',''))-1;if(Number.isInteger(requested)&&requested>=0&&requested<chapters.length)index=requested;
   resize();render();
-  fetch('assets/europe-countries.geojson').then(r=>{if(!r.ok)throw Error('Map unavailable');return r.json();}).then(data=>{mapData=data;draw();}).catch(()=>{$('.map-credit').textContent=t(UI.mapUnavailable);});
+  fetch('assets/europe-countries.geojson?v=20260928-3').then(r=>{if(!r.ok)throw Error('Map unavailable');return r.json();}).then(data=>{mapData=data;draw();}).catch(()=>{$('.map-credit').textContent=t(UI.mapUnavailable);});
   async function poll(){
     try{
       const response=await fetch('live.json',{cache:'no-store'});if(!response.ok)return;
