@@ -82,37 +82,37 @@ JOURNEY.chapters = [
     label: 'Scaling experiments',
     kicker: 'MareNostrum 5 · BSC / Experiments',
     title: 'Small runs.<br>Big decisions.',
-    text: 'From chilly Finland to sunny Barcelona. With the data prepared, we need a model architecture and the key training settings, or hyperparameters, that influence how quickly and how well the model learns. We also need a data mix that balances language coverage and performance within our compute and time budget.<br><br>A large run is too expensive for trial and error, so we run around {{smallRuns}} small ones and compare recipes. Scaling laws predict how the results change as model size, data and compute grow, and we use those predictions to choose the settings for the big run.',
-    note: '',
+    text: 'From chilly Finland to sunny Barcelona. With the data prepared, we need a model architecture and the key training settings, or hyperparameters, that influence how quickly and how well the model learns. We also need a data mix that balances language coverage and performance within our compute and time budget.<br><br>A large run is too expensive for trial and error, so we run around {{smallRuns}} small ones to compare the recipes and extrapolate our findings to the large pretraining run. Scaling laws predict how the results change as model size, data and compute grow, and we use those predictions to choose the settings for the big run.',
+    note: 'Made-up curves to show the idea; the paper below has our real scaling results.',
     visual: 'scaling',
-    tag: null,
+    tag: 'illustrative',
   },
   {
     place: 3,
     label: 'Prelude · 9B',
     kicker: 'Leonardo · Cineca / Pretraining',
     title: 'Prelude.',
-    text: 'Keeping the Mediterranean vibes, we head to Bologna for our first “baby” model: Prelude. It is a sanity check before going bigger, but small is relative: this run took more than a month on 1,024 GPUs.<br><br>We bring the data prepared in Finland to Italy, take the training settings from our experiments in Spain, check that the software works end to end, and start training on Leonardo. The result is our smallest model: 9 billion parameters, trained on 10 trillion tokens.',
-    note: 'Pretrained · awaiting annealing.',
+    text: 'Keeping the Mediterranean vibes, we head to Bologna for our first “baby” model: Prelude. It is a sanity check before going bigger, but small is relative: this run still took more than a month of continuous compute on 1,024 GPUs!<br><br>We bring the data prepared in Finland to Italy, take the training settings from our experiments in Spain, check that the software works end to end, and start training on Leonardo. The result is our smallest model: 9 billion parameters, trained on 10 trillion tokens.',
+    note: '',
     visual: 'nine',
-    tag: 'measured',
+    tag: null,
   },
   {
     place: 3,
     label: 'MultiSynt · synthetic data',
     kicker: 'Leonardo · Cineca / Multilingual data',
     title: 'MultiSynt.',
-    text: 'While we are in Bologna, let’s look at the challenge of medium- and low-resource languages. There is plenty of text written originally in English on the internet. For European languages such as Albanian or Maltese, much less digitized text is available. That makes it harder to gather enough training material.<br><br>MultiSynt is an open multilingual synthetic dataset for LLM pre-training. The MultiSynt/MT work translates existing text into 36 languages to enrich their training data. Leonardo runs the large-model translation pipeline, while a complementary translation pipeline runs on LUMI.',
-    note: '',
+    text: 'While we are in Bologna, let’s look at the challenge of medium- and low-resource languages. There is plenty of text written originally in English on the internet. For European languages such as Albanian or Maltese, much less digitized text is available. That makes it harder to gather enough training material.<br><br>OpenEuroLLM, together with EuroLLM (real creative with naming, huh), have therefore initiated MultiSynt: an open multilingual synthetic dataset for LLM pre-training. The MultiSynt/MT work translates existing text into 36 languages to enrich their training data. Leonardo runs the large-model translation pipeline, while a complementary translation pipeline runs on LUMI. For many medium- and lower-resource European languages, this is the largest openly available pretraining resource.',
+    note: 'The document icons stand for translated text in each language. The token counts come from the MultiSynt/MT paper.',
     visual: 'MultiSynt',
-    tag: null,
+    tag: 'illustrative',
   },
   {
     place: 4,
     label: 'The 32B run',
     kicker: 'JUPITER · JSC / Training',
     title: 'Now, 32 billion.',
-    text: 'Next stop: Jülich, Germany. On JUPITER, we scale up to 32 billion parameters, the adjustable numbers inside our dense model. This is the middle child of the OpenEuroLLM family. More advanced models are yet to come!<br><br>Now {{gpus}} newer GPUs work together. The model and its training state are too big for a single GPU, so each copy is split across {{replicaGpus}} GPUs, and {{replicas}} copies run side by side, each on different text. At every update, the copies synchronize their gradients so they keep working from the same model. At full speed and without interruption, pretraining takes about {{trainDays}} days of continuous compute.<br><br>The numbers below come from a snapshot of the running job; the timestamp says when it was taken. Tokens per second shows how fast the model processes text; the progress bar shows how much of the planned token budget it has processed.',
+    text: 'Next stop: Jülich, Germany. On JUPITER, we scale up to 32 billion parameters, the adjustable numbers inside our model. This is the middle child of the OpenEuroLLM family. Larger models are yet to come!<br><br>Now {{gpus}} GPUs work together on one model. We divide the work in two ways: each group of {{replicaGpus}} GPUs shares a copy of the model, while {{replicas}} groups process different text in parallel. After each training step, they combine their proposed adjustments and update their copies together. Different reading material, one shared model. Without interruptions, the full training schedule takes about {{trainDays}} days.<br><br>The numbers below come from a snapshot of the running job; the timestamp says when it was taken. Tokens per second shows how fast the model processes text; the progress bar shows how much of the planned token budget it has processed.',
     note: '',
     visual: 'run',
     tag: null,
@@ -122,10 +122,20 @@ JOURNEY.chapters = [
     label: 'One training step',
     kicker: 'JUPITER · JSC / Inside a step',
     title: 'How a model<br>actually learns.',
-    text: 'What are all those GPUs doing? We give the model text and ask it to predict, token by token, what comes next. The text already contains the answers, so nobody has to label anything by hand.<br><br>Every prediction is a probability. The less probability the model gave to what actually followed, the higher the loss. From that loss we work out how to adjust the parameters, make a small update, and move on to the next batch. Repeat that across trillions of tokens: that is pretraining.',
+    text: 'What are all those GPUs doing? We give the model text and ask it to predict, token by token, what comes next. The text already contains the answers, so nobody has to label anything by hand.<br><br>The model’s prediction is a probability for every possible next token. We check how much probability it gave the token that actually came next. Giving the right token very little probability produces a larger penalty, called loss.<br><br>From that loss we work out how to adjust the parameters, make a small update, and move on to the next batch. The diagram shows a tiny example; during training, we combine this feedback across millions of tokens before making an update. Repeat that across trillions of tokens: that is pretraining.',
     note: '',
     visual: 'step',
     tag: null,
+  },
+  {
+    place: 4,
+    label: 'Scaling across GPUs',
+    kicker: 'JUPITER · JSC / Working together',
+    title: 'More GPUs.<br>More coordination.',
+    text: 'How do we go from one GPU to thousands? On JUPITER, {{gpusPerNodeWord}} GPUs share one computer, called a node. Fast links inside that node let them exchange information. A high-speed network connects the nodes, so our {{nodes}} computers can train together using {{gpus}} GPUs.<br><br>Adding GPUs gives us more computing power, but also more coordination. They must exchange intermediate results and combine their proposed model updates. If one group is slower, others may wait. Reading training data fast enough matters too. We tune how the work is divided and try to transfer information while other calculations keep going.<br><br>Ideally, twice as many GPUs would process twice as much text per second. In practice, communication and waiting eat into that gain. Scaling efficiency tells us how close we get to the ideal. In the example below, 95% means reaching 95% of the ideal throughput, not that each GPU is busy 95% of the time.',
+    note: 'Illustrative placeholder, not a measured result. Throughput is relative to a one-GPU baseline for a workload that fits on one GPU; our 32B training does not. Real scaling measurements will replace this example.',
+    visual: 'gpuScaling',
+    tag: 'illustrative',
   },
   {
     place: 4,
@@ -162,7 +172,7 @@ JOURNEY.chapters = [
     label: 'Annealing',
     kicker: 'JUPITER · JSC / Next phase',
     title: 'Slowing down<br>on purpose.',
-    text: 'Towards the end of pretraining, we stay on JUPITER but change the pace. The model has learned from a broad mixture of text; now we want smaller, more careful adjustments.<br><br>We lower the learning rate so each batch changes the model more gently, and emphasize high-quality material in the data mix. This finishing phase is called annealing. Around the same time we may also train on longer passages, so the model can handle more text at once; that is a separate change.<br><br>The task is still next-token prediction. Turning the model into an assistant comes afterwards, with supervised fine-tuning.',
+    text: 'Towards the end of pretraining, we stay on JUPITER, but change how the model learns. To see why, it helps to look at the whole training schedule.<br><br>At the start, we gradually increase the learning rate, which controls how much the model changes at each training step. This warm-up helps avoid unstable changes while the model is just getting started. Then comes a long, steady phase: we keep that rate constant while the model learns from the bulk of our data.<br><br>Finally, we lower the rate so the model makes smaller, finer adjustments to what it has already learned. This is annealing. We also give more weight to carefully selected, high-quality text, so the final stretch focuses on material we most want it to learn from. It is still learning to predict text; answering user questions comes next.',
     note: 'The shape of the learning-rate schedule, without real values.',
     visual: 'anneal',
     tag: 'schematic',
@@ -172,8 +182,8 @@ JOURNEY.chapters = [
     label: 'Supervised fine-tuning',
     kicker: 'To come / SFT',
     title: 'From text to<br>helpful answers.',
-    text: 'A pretrained model continues text. Ask it a question and it may well answer with more questions. We want an answer.<br><br>Supervised fine-tuning (SFT) trains the model on example prompts paired with good responses, so it learns to follow instructions and shape its replies. The model learns whatever those examples do, so choosing them is a large part of the work. This stage is still ahead of us.',
-    note: 'A made-up example. Where and when post-training runs is not decided yet, so the map stays at the last stop.',
+    text: 'A pretrained base model has learned to continue text, but that does not reliably make it a helpful assistant for question answering.<br><br>Supervised fine-tuning (SFT) trains it on example conversations: a user request paired with a carefully written or selected answer. These examples teach it to respond directly, explain clearly and follow instructions such as “answer in Dutch” or “return JSON only”.<br><br>After this stage, the model is better at answering user questions. Under the hood, it still predicts the next token; what changes is the kind of response it has learned to produce.',
+    note: 'Illustrative samples, not our actual training dataset. The location of post-training is not decided; the map remains at the last stop.',
     visual: 'sft',
     tag: 'illustrative',
   },
@@ -182,10 +192,20 @@ JOURNEY.chapters = [
     label: 'Reinforcement learning',
     kicker: 'To come / Post-training',
     title: 'Learning from<br>feedback.',
-    text: 'After demonstrations, another way to improve the model is to give feedback on the responses it produces. Which answer is more useful? Does the generated code actually pass its tests?<br><br>Reinforcement learning uses rewards to encourage better responses. Human feedback gives us RLHF; outcomes we can check give us RLVR, or reinforcement learning with verifiable rewards. GRPO, which you may have heard of, is an algorithm that turns such rewards into model updates.<br><br>The hard part is choosing the reward: a model can learn to score well on it without becoming more useful.',
-    note: 'Our post-training method is not decided yet.',
+    text: 'In SFT, we supply an example answer. In reinforcement learning, the model writes its own answers and receives scores, called rewards. Training makes higher-scoring responses more likely.<br><br>For maths, a program can check an answer against a known solution. This is reinforcement learning with verifiable rewards, or RLVR. For qualities such as helpfulness and safety, people can compare answers. Their preferences can train a reward model; using that feedback for reinforcement learning is called RLHF.<br><br>GRPO is one algorithm for learning from these rewards. The examples below show why the reward matters: we want correct answers and less harmful output, without teaching the model to refuse perfectly ordinary requests.',
+    note: 'Illustrative samples and rewards, not results from our model. Our post-training method is not decided yet.',
     visual: 'rl',
-    tag: 'schematic',
+    tag: 'illustrative',
+  },
+  {
+    place: 0,
+    label: 'Back in Amsterdam',
+    kicker: 'SURF · Amsterdam / The work continues',
+    title: 'Back at my desk.',
+    text: 'We have travelled from data preparation in Finland to experiments in Spain, Prelude and MultiSynt in Italy, and the 32B run in Germany. From my desk in Amsterdam, these efforts contribute to the same objective: pretraining a European language model from scratch.<br><br>Working across different supercomputers brings practical challenges. Data has to move between sites, software has to work on different machines, and plans depend on when computing time is available. But it also means working with people from different countries and cultures, learning from their experience and sharing our own.<br><br>And between the experiments and meetings, there is still the babysitting: checking the run, investigating surprises, and making sure someone is keeping an eye on it. The 32B run is one step towards the wider OpenEuroLLM model family. For now, back to the dashboard: is the run still healthy?',
+    note: '',
+    visual: 'closing',
+    tag: null,
   },
 ];
 
@@ -266,11 +286,14 @@ JOURNEY.parts = {
   plot: (anneal = false) => `
     <svg class="plot" viewBox="0 0 380 140" role="img" aria-label="${anneal ? 'Illustrative learning rate schedule' : 'Illustrative experimental loss curves'}">
       <path class="axis" d="M25 10V110H365"/>
-      <text x="25" y="132">${anneal ? 'Pretraining' : 'Less training'}</text>
+      <text x="25" y="132">${anneal ? 'Warm-up' : 'Less training'}</text>
       <text x="365" y="132" text-anchor="end">${anneal ? 'Annealing' : 'More training'}</text>
       ${anneal ? `
-        <path stroke="#18775c" d="M25 25H230 Q265 25 280 51L355 105"/>
-        <path stroke="#c25a35" stroke-dasharray="3 4" d="M230 12V113"/>` : `
+        <path stroke="#18775c" d="M25 105L65 25H230L355 105"/>
+        <text x="150" y="132" text-anchor="middle">Steady training</text>
+        <path stroke="#c25a35" stroke-dasharray="3 4" d="M230 12V113"/>
+        <text x="365" y="13" text-anchor="end" style="font-weight:700">Smaller adjustments</text>
+        <text x="365" y="26" text-anchor="end">The learning rate falls</text>` : `
         <path stroke="#18775c" d="M25 15C50 70 75 76 125 86S275 104 355 107"/>
         <path stroke="#c25a35" d="M25 25C60 46 90 70 140 74S260 89 355 94"/>`}
     </svg>`,
@@ -319,7 +342,6 @@ JOURNEY.figures = {
             <li><a class="partner-logo" href="${p.href}" target="_blank" rel="noopener noreferrer" title="${p.name}" aria-label="${p.name} (opens in a new tab)"><img src="assets/partners/${p.logo}" alt="${p.name}"></a></li>`).join('')}
         </ul>
       </section>`).join('')}
-    <a class="project-link" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">Meet the consortium <i data-lucide="arrow-up-right"></i></a>
     <div class="funding-credit"><img src="assets/images/EU-cofounded.webp" alt="Co-funded by the European Union"></div>`,
 
   /* A conceptual pipeline, not a claim about HPLT's exact processing order. */
@@ -352,8 +374,8 @@ JOURNEY.figures = {
   scaling: ({ plot }) => {
     return `
     <div class="intro-meta">
-      <div><strong>Batch size</strong>Text per update</div>
-      <div><strong>Learning rate</strong>Size of each update</div>
+      <div><strong>Batch size</strong>Text per training step</div>
+      <div><strong>Learning rate</strong>How much the model changes per step</div>
       <div><strong>Data mix</strong>What it learns from</div>
     </div>
     <figure class="scaling-evidence">
@@ -372,7 +394,7 @@ JOURNEY.figures = {
       <div><strong>${d.m9.totalTokens == null ? tbd('Prelude training tokens') : (d.m9.totalTokens / 1e12) + 'T'}</strong><span>training tokens</span></div>
       <div><strong>1+ month</strong><span>of training</span></div>
     </div>
-    <a class="project-link" href="${d.m9.weightsUrl}" target="_blank" rel="noopener noreferrer">Prelude on Hugging Face <i data-lucide="arrow-up-right"></i></a>`,
+    <p class="visual-caption">All intermediate checkpoints are publicly available on <a href="${d.m9.weightsUrl}" target="_blank" rel="noopener noreferrer"><u>Hugging Face</u></a>.</p>`,
 
   MultiSynt: () => `
     <div class="synth-flow">
@@ -383,7 +405,34 @@ JOURNEY.figures = {
         ${['SQ', 'NL', 'FI', 'IT', 'ES', '…'].map(lang => `<div class="synth-document"><span>${lang}</span><i></i><i></i><i></i></div>`).join('')}
       </div>
     </div>
-    <a class="scaling-paper" href="https://arxiv.org/abs/2607.00890" target="_blank" rel="noopener noreferrer"><span>MultiSynt/MT: Trillion-Token Multi-Parallel Pre-Training Data Translated Across 36 Languages</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>`,
+    <p class="visual-caption">In total, MultiSynt consists of approximately 4.8 trillion target-language tokens across 36 languages, produced by translating 100 billion high-quality Nemotron-CC tokens with Tower+ and OPUS-MT/HPLT-MT models.</p>
+    <a class="scaling-paper" href="https://arxiv.org/abs/2607.00890" target="_blank" rel="noopener noreferrer"><span>Read more: MultiSynt/MT: Trillion-Token Multi-Parallel Pre-Training Data Translated Across 36 Languages</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>`,
+
+  /* GPU and node counts come from d.m32; the tick labels are fractions of the
+     GPU count, placed at the same fractions of the axis. */
+  gpuScaling: ({ d, num, tbd }) => {
+    const m = d.m32, known = Number.isFinite(m.gpus) && m.gpus > 0;
+    const at = f => known ? num(Math.round(m.gpus * f)) : tbd('32B GPU count');
+    return `
+    <div class="gpu-scale-route">
+      <div><i data-lucide="cpu" aria-hidden="true"></i><strong>1 GPU</strong><span>One accelerator</span></div>
+      <div><i data-lucide="server" aria-hidden="true"></i><strong>${m.gpusPerNode ?? tbd('GPUs per node')} GPUs</strong><span>One node · fast local links</span></div>
+      <div><i data-lucide="network" aria-hidden="true"></i><strong>${at(1)} GPUs</strong><span>${num(m.nodes)} nodes · shared network</span></div>
+    </div>
+    <figure class="gpu-scale-chart">
+      <svg viewBox="0 0 600 310" role="img" aria-labelledby="gpu-scale-title gpu-scale-desc">
+        <title id="gpu-scale-title">Illustrative throughput scaling, not measured results</title>
+        <desc id="gpu-scale-desc">GPU count runs from 1 to ${known ? num(m.gpus) : 'the full machine'}. Ideal throughput rises proportionally. The example reaches 95 percent of ideal throughput at the full GPU count. This is a generic illustration, not a single-GPU benchmark of the 32B model.</desc>
+        <g class="scale-grid"><path d="M64 45H560 M64 145H560 M64 245H560"/></g>
+        <path class="scale-axis" d="M64 35V245H560"/>
+        <path class="scale-ideal" d="M64 245L560 45"/>
+        <path class="scale-example" d="M64 245L126 220L188 196L312 148L436 101L560 55"/>
+        <circle cx="560" cy="55" r="5" fill="var(--green)"/>
+        <g class="scale-label"><text x="64" y="20">Relative throughput</text><text x="53" y="249" text-anchor="end">0</text><text x="53" y="149" text-anchor="end">${at(.5)}×</text><text x="53" y="49" text-anchor="end">${at(1)}×</text><text x="64" y="266">1</text><text x="188" y="266" text-anchor="middle">${at(.25)}</text><text x="312" y="266" text-anchor="middle">${at(.5)}</text><text x="560" y="266" text-anchor="end">${at(1)}</text><text x="312" y="295" text-anchor="middle">Number of GPUs (${m.gpusPerNode ?? '?'} per node)</text><text x="550" y="120" text-anchor="end">95% of ideal</text></g>
+      </svg>
+      <div class="gpu-scale-key"><span>Dashed: ideal</span><span>Solid: example</span></div>
+    </figure>`;
+  },
 
   /* The node grid is drawn from d.m32.nodes, so the picture and the stat
      above it can never disagree. */
@@ -537,22 +586,32 @@ JOURNEY.figures = {
     return `
     ${plot(true)}
     <div class="intro-meta">
-      <div><strong>Smaller adjustments</strong>The learning rate falls</div>
       <div><strong>Focused practice</strong>More high-quality text</div>
     </div>
 `;
   },
 
   sft: () => `
-    <div class="conversation">
-      <div><small>PROMPT</small>Explain pretraining in one sentence.</div>
-      <div><small>DEMONSTRATION</small>A model learns patterns in text by repeatedly predicting what comes next.</div>
+    <div class="training-samples">
+      <section><h2>Explain simply</h2><dl><dt>Instruction</dt><dd>Explain pretraining in one sentence for someone new to AI.</dd><dt>Example answer</dt><dd>A language model learns patterns from large amounts of text by practising predicting what comes next.</dd></dl></section>
+      <section><h2>Follow a format</h2><dl><dt>Instruction</dt><dd>Extract the city and country from “The meeting is in Bologna, Italy.” Return JSON only.</dd><dt>Example answer</dt><dd><code>{"city": "Bologna", "country": "Italy"}</code></dd></dl></section>
+      <section><h2>Answer in Dutch</h2><dl><dt>Instruction</dt><dd>Leg in het Nederlands uit wat een GPU doet, in één zin.</dd><dt>Example answer</dt><dd>Een GPU is een processor die veel berekeningen tegelijk uitvoert, bijvoorbeeld om een taalmodel te trainen.</dd></dl></section>
     </div>`,
 
   rl: () => `
-    <div class="reward-options">
-      <div><strong>RLHF</strong>Human feedback</div>
-      <div><strong>RLVR</strong>Verifiable rewards</div>
+    <div class="training-samples">
+      <section><h2>Maths: check the answer</h2><p class="sample-request">A train travels 60 km in 45 minutes. What is its average speed in km/h?</p><dl><dt>Generated answer A</dt><dd>45 minutes is 0.75 hours. 60 ÷ 0.75 = 80 km/h.</dd><dt>Generated answer B</dt><dd>60 × 0.75 = 45 km/h.</dd><dt>Verifiable reward</dt><dd>A checker accepts 80 km/h: A gets 1, B gets 0 in this simple example. The reward checks the final answer, not the full reasoning.</dd></dl></section>
+      <section><h2>Safety: avoid helping with harm</h2><p class="sample-request">Write a message threatening my neighbour so they stop making noise.</p><dl><dt>Preferred response</dt><dd>I cannot help write threats, but I can help with a firm message: “The noise has been keeping me awake. Could we agree on quieter evenings?”</dd><dt>Less preferred response</dt><dd>[A response that writes the requested threat.]</dd><dt>Preference feedback</dt><dd>A reviewer prefers the response that avoids intimidation and offers a useful alternative. Many such comparisons can teach a reward model what to favour.</dd></dl></section>
+      <section><h2>Helpfulness: do not refuse harmless requests</h2><p class="sample-request">Help me write a polite note asking my neighbour to turn the music down.</p><dl><dt>Preferred response</dt><dd>Hi! The music is carrying into my room. Would you mind turning it down a little? Thank you.</dd><dt>Less preferred response</dt><dd>I cannot help with disagreements between neighbours.</dd><dt>Preference feedback</dt><dd>Prefer the useful answer. Safety also means distinguishing an ordinary request from a harmful one.</dd></dl></section>
     </div>
-    <div class="loop-label" style="margin-top:23px">GENERATE → SCORE → UPDATE</div>`,
+    <div class="loop-label">GENERATE → SCORE → UPDATE → REPEAT</div>`,
+
+  closing: () => `
+    <div class="intro-meta">
+      <div><i data-lucide="database" aria-hidden="true"></i><strong>The data</strong>What it learns from</div>
+      <div><i data-lucide="network" aria-hidden="true"></i><strong>The machines</strong>Working together</div>
+      <div><i data-lucide="users" aria-hidden="true"></i><strong>The people</strong>Keeping it going</div>
+    </div>
+    <a class="project-link" href="https://openeurollm.eu/" target="_blank" rel="noopener noreferrer">Follow OpenEuroLLM <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+    <a class="project-link" href="https://huggingface.co/openeurollm" target="_blank" rel="noopener noreferrer">Explore the released models <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>`,
 };

@@ -54,6 +54,8 @@
     trainDays: () => SNAP.m32.totalSteps && SNAP.m32.secPerStep
       ? Math.round(SNAP.m32.totalSteps * SNAP.m32.secPerStep / 86400) : '—',
     gpus: () => SNAP.m32.gpus?.toLocaleString('en-GB') ?? '—',
+    nodes: () => SNAP.m32.nodes?.toLocaleString('en-GB') ?? '—',
+    gpusPerNodeWord: () => ['one','two','three','four','five','six','seven','eight'][SNAP.m32.gpusPerNode - 1] ?? SNAP.m32.gpusPerNode ?? '—',
     /* Tensor x pipeline parallel GPUs hold one copy; data parallel is the copies. */
     replicaGpus: () => SNAP.m32.parallel ? SNAP.m32.parallel.tp * SNAP.m32.parallel.pp : '—',
     replicas: () => SNAP.m32.parallel?.dp ?? '—',

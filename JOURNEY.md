@@ -43,7 +43,7 @@ partner count and `SNAP.family.nextModelYear`.
 
 `window.journeyMissing` lists every gap the current chapter had to leave blank.
 
-Chapters can be linked directly, e.g. `#chapter-7` for the 32B run.
+Chapters can be linked directly, e.g. `#chapter-8` for the 32B run.
 Arrow keys navigate; the menu and map pins also select chapters. Reduced-motion
 preferences skip travel animation and pause the training-step illustration.
 
@@ -58,7 +58,7 @@ project site, with locally stored logos linking to each partner's website.
 Machine/operator pairs: Snellius/SURF, LUMI/CSC, MareNostrum 5/BSC,
 Leonardo/Cineca and JUPITER/JSC. Map pins retain city names.
 
-The 12-chapter journey includes Prelude (9B, 1,024 NVIDIA A100 GPUs) with its
+The journey includes Prelude (9B, 1,024 NVIDIA A100 GPUs) with its
 Hugging Face link, plus a separate MultiSynt chapter at Bologna describing
 multilingual synthetic pretraining data. Further MultiSynt details are pending.
 The partners chapter groups smaller, evenly spaced marks on a dark background.

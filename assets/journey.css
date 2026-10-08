@@ -384,3 +384,19 @@ body.overview #scene{height:auto;min-height:calc(100svh - 198px)}
 }
 
 .loop-bottom #step-toggle{margin:0 0 0 8px;height:30px;border:1px solid var(--line);border-radius:4px;padding:0 9px}
+.gpu-scale-route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:28px}
+.gpu-scale-route>div{display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;min-width:0}
+.gpu-scale-route strong{font-size:16px}.gpu-scale-route span{font-size:12px;line-height:1.5;color:var(--muted)}
+.gpu-scale-chart{margin:0}.gpu-scale-chart svg{display:block;width:100%;height:auto;overflow:visible}
+.scale-grid{stroke:var(--line);fill:none}.scale-axis{stroke:var(--muted);fill:none}
+.scale-ideal{stroke:var(--muted);stroke-width:2;stroke-dasharray:6 5;fill:none}
+.scale-example{stroke:var(--green);stroke-width:3;fill:none}
+.scale-label{fill:var(--muted);font-size:13px}.gpu-scale-key{display:flex;justify-content:center;gap:24px;font-size:12px;margin:10px 0}
+.gpu-scale-chart figcaption{font-size:12px;line-height:1.6;color:var(--muted);text-align:left;margin-top:16px}
+.training-samples{text-align:left;display:grid;gap:26px}
+.training-samples section{border-top:1px solid var(--line);padding-top:18px;min-width:0}
+.training-samples h2{font-size:17px;line-height:1.4;margin:0 0 14px}
+.training-samples dl{margin:0}.training-samples dt{font-size:11px;font-weight:700;color:var(--green);margin:14px 0 5px}
+.training-samples dd,.sample-request{font-size:14px;line-height:1.65;margin:0;color:var(--muted);overflow-wrap:anywhere}
+.training-samples code{white-space:pre-wrap;font-size:13px}.sample-request{color:var(--ink)}
+.training-samples+.loop-label{margin-top:28px}
