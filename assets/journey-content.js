@@ -173,7 +173,7 @@ JOURNEY.chapters = [
     kicker: 'JUPITER · JSC / Next phase',
     title: 'Slowing down<br>on purpose.',
     text: 'Towards the end of pretraining, we stay on JUPITER, but change how the model learns. To see why, it helps to look at the whole training schedule.<br><br>At the start, we gradually increase the learning rate, which controls how much the model changes at each training step. This warm-up helps avoid unstable changes while the model is just getting started. Then comes a long, steady phase: we keep that rate constant while the model learns from the bulk of our data.<br><br>Finally, we lower the rate so the model makes smaller, finer adjustments to what it has already learned. This is annealing. We also give more weight to carefully selected, high-quality text, so the final stretch focuses on material we most want it to learn from. It is still learning to predict text; answering user questions comes next.',
-    note: 'The shape of the learning-rate schedule, without real values.',
+    note: 'The shape of the learning rate schedule, without real values.',
     visual: 'anneal',
     tag: 'schematic',
   },
@@ -569,7 +569,8 @@ JOURNEY.figures = {
           <button type="button" data-check="changes" aria-pressed="false">Recent changes</button>
         </fieldset>
         <p id="incident-answer" hidden aria-live="polite"></p>
-        <details class="incident-finding"><summary>What did we suspect in this run?</summary><p>Our working explanation was a combination of a software bug and insufficient normalization. We consider these likely contributors, not a conclusively established diagnosis.</p></details>`
+        <details class="incident-finding"><summary>What did we suspect in this run?</summary><p>Our working explanation was a combination of a software bug and insufficient normalization. We consider these likely contributors, not a conclusively established diagnosis.</p></details>
+        <a class="project-link" href="https://github.com/OpenEuroLLM/Taskboard/issues/381" target="_blank" rel="noopener noreferrer">Follow the debugging journey on GitHub <i data-lucide="arrow-up-right" aria-hidden="true"></i></a>`
       : `<div class="incident incident--empty"><span class="incident-label">From the run: a loss spike</span>${tbd('loss-spike screenshot')}</div>`}
     `;
   },
@@ -586,7 +587,7 @@ JOURNEY.figures = {
     return `
     ${plot(true)}
     <div class="intro-meta">
-      <div><strong>Focused practice</strong>More high-quality text</div>
+      <div>More high-quality text</div>
     </div>
 `;
   },
